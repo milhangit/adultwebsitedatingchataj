@@ -14,7 +14,7 @@ export default function ChatSection({ profileName, profileId }: { profileName: s
                 className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-xl font-semibold transition-colors shadow-lg shadow-teal-200"
             >
                 <MessageCircle className="w-5 h-5" />
-                {showChat ? 'Close Chat' : 'Chat with AI'}
+                {showChat ? 'Close Chat' : 'Send Message'}
             </button>
 
             {showChat && (

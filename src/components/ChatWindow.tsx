@@ -21,7 +21,7 @@ export default function ChatWindow({ profileName, profileId, onClose }: ChatWind
     const [messages, setMessages] = useState<Message[]>([
         {
             id: 1,
-            text: `Ayubowan! I am ${profileName}'s AI assistant. Ask me anything about ${profileName}'s interests, family, or expectations.`,
+            text: `Hi! Thanks for visiting my profile. Feel free to ask me anything.`,
             sender: 'ai',
             timestamp: new Date(),
         },
@@ -83,8 +83,11 @@ export default function ChatWindow({ profileName, profileId, onClose }: ChatWind
                         <Bot className="w-5 h-5" />
                     </div>
                     <div>
-                        <h3 className="font-bold text-sm">Chat with {profileName}</h3>
-                        <p className="text-xs text-teal-100">AI Assistant</p>
+                        <h3 className="font-bold text-sm">{profileName}</h3>
+                        <p className="text-xs text-teal-100 flex items-center gap-1">
+                            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                            Online
+                        </p>
                     </div>
                 </div>
                 {onClose && (
