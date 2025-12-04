@@ -38,6 +38,29 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
         scrollToBottom();
     }, [messages]);
 
+    useEffect(() => {
+        // Fetch initial messages
+        const fetchMessages = async () => {
+            try {
+                const res = await fetch(`/api/messages?profileId=${profile.id}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.length > 0) {
+                        setMessages(data.map((m: any) => ({
+                            id: m.id,
+                            text: m.content,
+                            sender: m.is_user_message ? 'user' : 'ai',
+                            timestamp: new Date(m.created_at)
+                        })));
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        };
+        fetchMessages();
+    }, [profile.id]);
+
     const handleSend = async () => {
         if (!inputText.trim()) return;
 
@@ -52,8 +75,23 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
         setInputText('');
         setIsTyping(true);
 
+        // Save user message
+        try {
+            await fetch('/api/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    receiver_id: profile.id,
+                    content: userMessage.text,
+                    is_user_message: true
+                })
+            });
+        } catch (error) {
+            console.error('Error saving message:', error);
+        }
+
         // Simulate AI delay and response with persona
-        setTimeout(() => {
+        setTimeout(async () => {
             const lowerInput = inputText.toLowerCase();
             let responseText = '';
 
@@ -87,6 +125,21 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
 
             setMessages((prev) => [...prev, aiMessage]);
             setIsTyping(false);
+
+            // Save AI message
+            try {
+                await fetch('/api/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        receiver_id: profile.id,
+                        content: aiMessage.text,
+                        is_user_message: false
+                    })
+                });
+            } catch (error) {
+                console.error('Error saving AI message:', error);
+            }
         }, 1500);
     };
 

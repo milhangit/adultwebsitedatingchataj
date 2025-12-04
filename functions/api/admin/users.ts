@@ -3,12 +3,18 @@ interface Env {
 }
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
-    const { env } = context;
+    const { request, env } = context;
     try {
-        // Fetch pending users (isVerified = false)
-        const { results } = await env.DB.prepare(
-            'SELECT * FROM profiles WHERE isVerified = FALSE ORDER BY created_at DESC'
-        ).all();
+        const url = new URL(request.url);
+        const status = url.searchParams.get('status');
+
+        let query = 'SELECT * FROM profiles';
+        if (status !== 'all') {
+            query += ' WHERE isVerified = FALSE';
+        }
+        query += ' ORDER BY created_at DESC';
+
+        const { results } = await env.DB.prepare(query).all();
 
         return new Response(JSON.stringify(results), {
             headers: { 'Content-Type': 'application/json' }

@@ -12,6 +12,7 @@ export default function AdminDashboard() {
     const [pendingUsers, setPendingUsers] = useState<any[]>([]);
     const [reports, setReports] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [chatLogs, setChatLogs] = useState<any[]>([]);
 
     const handleLogout = () => {
         document.cookie = "admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
@@ -21,15 +22,17 @@ export default function AdminDashboard() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [usersRes, reportsRes, statsRes] = await Promise.all([
-                fetch('/api/admin/users'),
+            const [usersRes, reportsRes, statsRes, chatRes] = await Promise.all([
+                fetch('/api/admin/users?status=all'),
                 fetch('/api/admin/reports'),
-                fetch('/api/admin/stats')
+                fetch('/api/admin/stats'),
+                fetch('/api/admin/chat')
             ]);
 
             if (usersRes.ok) setPendingUsers(await usersRes.json());
             if (reportsRes.ok) setReports(await reportsRes.json());
             if (statsRes.ok) setStats(await statsRes.json());
+            if (chatRes.ok) setChatLogs(await chatRes.json());
         } catch (error) {
             console.error('Error fetching admin data:', error);
         } finally {
@@ -87,6 +90,15 @@ export default function AdminDashboard() {
                         Chat Oversight
                     </button>
                     <button
+                        onClick={() => setActiveTab('online')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'online' ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-50'}`}
+                    >
+                        <div className="w-5 h-5 flex items-center justify-center">
+                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>
+                        </div>
+                        Online Users
+                    </button>
+                    <button
                         onClick={() => setActiveTab('reports')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'reports' ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-50'}`}
                     >
@@ -120,49 +132,51 @@ export default function AdminDashboard() {
                                     </div>
                                 </div>
 
-                                {/* Pending Approvals */}
+                                {/* All Users List */}
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                                        <h3 className="font-semibold text-gray-900">Pending Approvals</h3>
+                                        <h3 className="font-semibold text-gray-900">All Users</h3>
                                     </div>
                                     <div className="overflow-x-auto">
                                         <table className="w-full text-left text-sm">
                                             <thead className="bg-gray-50 text-gray-500">
                                                 <tr>
                                                     <th className="px-6 py-3 font-medium">Name</th>
-                                                    <th className="px-6 py-3 font-medium">Email</th>
-                                                    <th className="px-6 py-3 font-medium">Date</th>
+                                                    <th className="px-6 py-3 font-medium">Status</th>
+                                                    <th className="px-6 py-3 font-medium">Joined</th>
                                                     <th className="px-6 py-3 font-medium text-right">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-gray-200">
-                                                {pendingUsers.length > 0 ? pendingUsers.map((user) => (
+                                                {pendingUsers.map((user) => (
                                                     <tr key={user.id} className="hover:bg-gray-50">
                                                         <td className="px-6 py-4 font-medium text-gray-900">{user.name}</td>
-                                                        <td className="px-6 py-4 text-gray-500">{user.email || 'N/A'}</td>
+                                                        <td className="px-6 py-4">
+                                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.isVerified ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                                                {user.isVerified ? 'Verified' : 'Pending'}
+                                                            </span>
+                                                        </td>
                                                         <td className="px-6 py-4 text-gray-500">{new Date(user.created_at).toLocaleDateString()}</td>
                                                         <td className="px-6 py-4 text-right space-x-2">
-                                                            <button
-                                                                onClick={() => handleUserAction(user.id, 'approve')}
-                                                                className="text-green-600 hover:bg-green-50 p-1 rounded"
-                                                                title="Approve"
-                                                            >
-                                                                <Check className="w-5 h-5" />
-                                                            </button>
+                                                            {!user.isVerified && (
+                                                                <button
+                                                                    onClick={() => handleUserAction(user.id, 'approve')}
+                                                                    className="text-green-600 hover:bg-green-50 p-1 rounded"
+                                                                    title="Approve"
+                                                                >
+                                                                    <Check className="w-5 h-5" />
+                                                                </button>
+                                                            )}
                                                             <button
                                                                 onClick={() => handleUserAction(user.id, 'reject')}
                                                                 className="text-red-600 hover:bg-red-50 p-1 rounded"
-                                                                title="Reject"
+                                                                title="Delete"
                                                             >
                                                                 <X className="w-5 h-5" />
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                )) : (
-                                                    <tr>
-                                                        <td colSpan={4} className="px-6 py-8 text-center text-gray-500">No pending approvals</td>
-                                                    </tr>
-                                                )}
+                                                ))}
                                             </tbody>
                                         </table>
                                     </div>
@@ -182,8 +196,39 @@ export default function AdminDashboard() {
                         {activeTab === 'chat' && (
                             <div>
                                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Chat Oversight</h2>
-                                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                                    <p className="text-gray-500">Logs of flagged chat interactions will appear here.</p>
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                                        <h3 className="font-semibold text-gray-900">Live Message Log</h3>
+                                    </div>
+                                    <div className="divide-y divide-gray-200">
+                                        {chatLogs.map((log) => (
+                                            <div key={log.id} className="p-4 hover:bg-gray-50">
+                                                <div className="flex justify-between items-start mb-1">
+                                                    <span className="font-medium text-sm text-gray-900">
+                                                        {log.is_user_message ? 'User' : 'AI'}
+                                                        <span className="text-gray-400 mx-2">to</span>
+                                                        {log.profile_name}
+                                                    </span>
+                                                    <span className="text-xs text-gray-400">{new Date(log.created_at).toLocaleString()}</span>
+                                                </div>
+                                                <p className="text-gray-600 text-sm">{log.content}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'online' && (
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">Online Users</h2>
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                                        <h3 className="font-semibold text-gray-900">Active Now</h3>
+                                    </div>
+                                    <div className="p-6 text-center text-gray-500">
+                                        Feature coming soon: Real-time online status tracking.
+                                    </div>
                                 </div>
                             </div>
                         )}
