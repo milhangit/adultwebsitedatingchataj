@@ -10,5 +10,9 @@ database_id = "6bb2be2a-5ed4-47bd-93f3-6a140869c0a0"
 
 
 
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "datesl-assets"
+
 [ai]
 binding = "AI"
