@@ -90,44 +90,31 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
             console.error('Error saving message:', error);
         }
 
-        // Simulate AI delay and response with persona
-        setTimeout(async () => {
-            const lowerInput = inputText.toLowerCase();
-            let responseText = '';
+        // Call AI API for response
+        try {
+            const res = await fetch('/api/chat/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    profile,
+                    userMessage: userMessage.text,
+                    history: messages.slice(-5) // Send last 5 messages for context if needed (API currently only uses last user msg but good to have)
+                })
+            });
 
-            // Simple keyword matching for persona simulation
-            if (lowerInput.includes('family') || lowerInput.includes('parents')) {
-                responseText = profile.family || `Family is very important to me. I come from a respectable family in ${profile.location}.`;
-            } else if (lowerInput.includes('work') || lowerInput.includes('job') || lowerInput.includes('occupation')) {
-                responseText = `I work as a ${profile.occupation}. It keeps me busy but I enjoy it!`;
-            } else if (lowerInput.includes('hobby') || lowerInput.includes('interest') || lowerInput.includes('free time')) {
-                responseText = profile.bio ? `As I mentioned in my bio: ${profile.bio}` : `I enjoy spending time with family and visiting temples.`;
-            } else if (lowerInput.includes('religion') || lowerInput.includes('caste')) {
-                responseText = `I am ${profile.religion} and my caste is ${profile.caste}.`;
-            } else if (lowerInput.includes('partner') || lowerInput.includes('looking for')) {
-                responseText = profile.preferences || `I'm looking for a kind and educated partner.`;
-            } else {
-                const genericResponses = [
-                    `That's interesting! Tell me more.`,
-                    `I see. Family values are really important to me, what about you?`,
-                    `I'm looking for someone who is kind and understanding.`,
-                    `Do you live in ${profile.location} as well?`,
-                ];
-                responseText = genericResponses[Math.floor(Math.random() * genericResponses.length)];
-            }
+            if (res.ok) {
+                const data = await res.json();
+                const aiMessage: Message = {
+                    id: Date.now() + 1,
+                    text: data.reply,
+                    sender: 'ai',
+                    timestamp: new Date(),
+                };
 
-            const aiMessage: Message = {
-                id: Date.now() + 1,
-                text: responseText,
-                sender: 'ai',
-                timestamp: new Date(),
-            };
+                setMessages((prev) => [...prev, aiMessage]);
+                setIsTyping(false);
 
-            setMessages((prev) => [...prev, aiMessage]);
-            setIsTyping(false);
-
-            // Save AI message
-            try {
+                // Save AI message
                 await fetch('/api/messages', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -137,10 +124,14 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
                         is_user_message: false
                     })
                 });
-            } catch (error) {
-                console.error('Error saving AI message:', error);
+            } else {
+                console.error('Failed to generate AI response');
+                setIsTyping(false);
             }
-        }, 1500);
+        } catch (error) {
+            console.error('Error generating response:', error);
+            setIsTyping(false);
+        }
     };
 
     return (
