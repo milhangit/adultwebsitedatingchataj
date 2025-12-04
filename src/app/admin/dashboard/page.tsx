@@ -67,6 +67,39 @@ export default function AdminDashboard() {
         name: '', age: 25, gender: 'Woman', location: 'Colombo', occupation: '', height: "5' 5\"", education: '', imageUrl: 'https://randomuser.me/api/portraits/women/1.jpg', religion: 'Buddhist', caste: 'Govigama', bio: '', family: '', preferences: '', email: ''
     });
 
+    const [uploading, setUploading] = useState(false);
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isEdit: boolean) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                if (isEdit) {
+                    setSelectedUser({ ...selectedUser, imageUrl: data.url });
+                } else {
+                    setNewUser({ ...newUser, imageUrl: data.url });
+                }
+            } else {
+                console.error('Upload failed');
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const handleCreateUser = async () => {
         try {
             const res = await fetch('/api/admin/users', {
@@ -125,7 +158,25 @@ export default function AdminDashboard() {
                             </select>
                             <input type="text" placeholder="Location" value={newUser.location} onChange={e => setNewUser({ ...newUser, location: e.target.value })} className="p-2 border rounded" />
                             <input type="text" placeholder="Occupation" value={newUser.occupation} onChange={e => setNewUser({ ...newUser, occupation: e.target.value })} className="p-2 border rounded" />
-                            <input type="text" placeholder="Image URL (randomuser.me)" value={newUser.imageUrl} onChange={e => setNewUser({ ...newUser, imageUrl: e.target.value })} className="p-2 border rounded" />
+
+                            <div className="col-span-1 md:col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
+                                <div className="flex items-center gap-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Image URL (or upload below)"
+                                        value={newUser.imageUrl}
+                                        onChange={e => setNewUser({ ...newUser, imageUrl: e.target.value })}
+                                        className="flex-1 p-2 border rounded"
+                                    />
+                                    <label className="cursor-pointer bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded text-sm font-medium transition-colors">
+                                        {uploading ? 'Uploading...' : 'Upload Photo'}
+                                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, false)} disabled={uploading} />
+                                    </label>
+                                </div>
+                                {newUser.imageUrl && <img src={newUser.imageUrl} alt="Preview" className="mt-2 w-16 h-16 rounded-full object-cover border" />}
+                            </div>
+
                             <textarea placeholder="Bio" value={newUser.bio} onChange={e => setNewUser({ ...newUser, bio: e.target.value })} className="p-2 border rounded col-span-2" />
                         </div>
                         <div className="mt-6 flex justify-end gap-3">
@@ -141,8 +192,12 @@ export default function AdminDashboard() {
                     <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         <h2 className="text-xl font-bold mb-4">Edit User</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="col-span-2 flex justify-center mb-4">
-                                <img src={selectedUser.imageUrl} alt="Preview" className="w-24 h-24 rounded-full object-cover border-2 border-primary" />
+                            <div className="col-span-2 flex flex-col items-center mb-4">
+                                <img src={selectedUser.imageUrl} alt="Preview" className="w-24 h-24 rounded-full object-cover border-2 border-primary mb-2" />
+                                <label className="cursor-pointer text-primary hover:text-primary-dark text-sm font-medium">
+                                    {uploading ? 'Uploading...' : 'Change Photo'}
+                                    <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, true)} disabled={uploading} />
+                                </label>
                             </div>
                             <input type="text" placeholder="Name" value={selectedUser.name} onChange={e => setSelectedUser({ ...selectedUser, name: e.target.value })} className="p-2 border rounded" />
                             <input type="text" placeholder="Image URL" value={selectedUser.imageUrl} onChange={e => setSelectedUser({ ...selectedUser, imageUrl: e.target.value })} className="p-2 border rounded" />
