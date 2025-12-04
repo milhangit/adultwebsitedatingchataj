@@ -26,7 +26,7 @@ export default function ProfileCard({ profile }: { profile: ProfileProps }) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <Link
-                        href={`/profile/${profile.id}`}
+                        href={`/profile?id=${profile.id}`}
                         className="w-full bg-white/90 backdrop-blur text-primary font-medium py-2 rounded-lg text-center hover:bg-white transition-colors"
                     >
                         View Profile
