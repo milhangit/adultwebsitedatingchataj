@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { MessageCircle } from 'lucide-react';
 import ChatWindow from '@/components/ChatWindow';
+import { Profile } from '@/lib/types';
 
-export default function ChatSection({ profileName, profileId }: { profileName: string, profileId: number }) {
+export default function ChatSection({ profile }: { profile: Profile }) {
     const [showChat, setShowChat] = useState(false);
 
     return (
@@ -18,8 +19,8 @@ export default function ChatSection({ profileName, profileId }: { profileName: s
             </button>
 
             {showChat && (
-                <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-300">
-                    <ChatWindow profileName={profileName} profileId={profileId} />
+                <div className="fixed inset-0 z-50 md:relative md:inset-auto md:z-auto md:mt-8 animate-in fade-in slide-in-from-bottom-4 md:slide-in-from-top-4 duration-300">
+                    <ChatWindow profile={profile} onClose={() => setShowChat(false)} />
                 </div>
             )}
         </>

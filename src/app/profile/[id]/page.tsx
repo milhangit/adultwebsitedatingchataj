@@ -115,7 +115,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
                                     <button className="p-3 rounded-full bg-gray-100 text-gray-500 hover:bg-pink-50 hover:text-pink-500 transition-colors">
                                         <Heart className="w-6 h-6" />
                                     </button>
-                                    <ChatSection profileName={profile.name} profileId={profile.id} />
+                                    <ChatSection profile={profile} />
                                 </div>
                             </div>
 

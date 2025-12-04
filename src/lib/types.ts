@@ -11,4 +11,7 @@ export interface Profile {
     religion?: string;
     caste?: string;
     bio?: string;
+    family?: string;
+    preferences?: string;
+    images?: string[];
 }
