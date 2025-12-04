@@ -8,9 +8,7 @@ binding = "DB"
 database_name = "datesl-db"
 database_id = "6bb2be2a-5ed4-47bd-93f3-6a140869c0a0"
 
-[[r2_buckets]]
-binding = "R2"
-bucket_name = "sithumina-assets"
+
 
 [ai]
 binding = "AI"
