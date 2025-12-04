@@ -115,7 +115,7 @@ function SearchContent() {
             if (caste !== 'Any' && profile.caste !== caste) return false;
 
             // Religion Filter
-            if (religions.length > 0 && !religions.includes(profile.religion)) return false;
+            if (religions.length > 0 && (!profile.religion || !religions.includes(profile.religion))) return false;
 
             // Gender Filter (Mock data doesn't have gender, assuming names imply gender for now or ignoring)
             // In a real app, we'd filter by gender. For this mock, we'll skip it or infer.
