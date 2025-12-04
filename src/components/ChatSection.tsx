@@ -5,8 +5,8 @@ import { MessageCircle } from 'lucide-react';
 import ChatWindow from '@/components/ChatWindow';
 import { Profile } from '@/lib/types';
 
-export default function ChatSection({ profile }: { profile: Profile }) {
-    const [showChat, setShowChat] = useState(false);
+export default function ChatSection({ profile, initialOpen = false }: { profile: Profile; initialOpen?: boolean }) {
+    const [showChat, setShowChat] = useState(initialOpen);
 
     return (
         <>

@@ -131,7 +131,7 @@ function ProfileContent() {
                                     <button className="p-3 rounded-full bg-gray-100 text-gray-500 hover:bg-pink-50 hover:text-pink-500 transition-colors">
                                         <Heart className="w-6 h-6" />
                                     </button>
-                                    <ChatSection profile={profile} />
+                                    <ChatSection profile={profile} initialOpen={searchParams.get('openChat') === 'true'} />
                                 </div>
                             </div>
 
