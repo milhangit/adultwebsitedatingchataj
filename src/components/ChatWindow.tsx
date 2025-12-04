@@ -75,7 +75,7 @@ export default function ChatWindow({ profileName, profileId, onClose }: ChatWind
     };
 
     return (
-        <div className="flex flex-col h-[500px] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div className="flex flex-col h-[500px] max-h-[80vh] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
             {/* Header */}
             <div className="bg-primary p-4 flex justify-between items-center text-white">
                 <div className="flex items-center gap-3">
@@ -148,6 +148,7 @@ export default function ChatWindow({ profileName, profileId, onClose }: ChatWind
                     <button
                         onClick={handleSend}
                         disabled={!inputText.trim() || isTyping}
+                        aria-label="Send message"
                         className="bg-primary hover:bg-primary-dark disabled:bg-gray-300 text-white p-2 rounded-lg transition-colors"
                     >
                         <Send className="w-5 h-5" />

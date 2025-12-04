@@ -1,0 +1,152 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Sithumina" [ref=e6]:
+        - /url: /
+      - button "Open main menu" [ref=e8]:
+        - generic [ref=e9]: Open main menu
+        - img [ref=e10]
+  - main [ref=e11]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - img "Dilani" [ref=e18]
+          - generic [ref=e19]:
+            - img "Gallery" [ref=e21] [cursor=pointer]
+            - img "Gallery" [ref=e23] [cursor=pointer]
+            - img "Gallery" [ref=e25] [cursor=pointer]
+        - generic [ref=e26]:
+          - heading "Verification Status" [level=3] [ref=e27]
+          - generic [ref=e28]:
+            - img [ref=e29]
+            - generic [ref=e31]: ID Verified
+          - generic [ref=e32]:
+            - img [ref=e33]
+            - generic [ref=e36]: Phone Verified
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - heading "Dilani, 24" [level=1] [ref=e41]:
+                - text: Dilani, 24
+                - img [ref=e42]
+              - paragraph [ref=e44]:
+                - img [ref=e45]
+                - text: Colombo
+            - generic [ref=e48]:
+              - button [ref=e49]:
+                - img [ref=e50]
+              - button "Close Chat" [ref=e52]:
+                - img [ref=e53]
+                - text: Close Chat
+              - generic [ref=e56]:
+                - generic [ref=e58]:
+                  - img [ref=e60]
+                  - generic [ref=e63]:
+                    - heading "Dilani" [level=3] [ref=e64]
+                    - paragraph [ref=e65]: Online
+                - generic [ref=e67]:
+                  - generic [ref=e69]:
+                    - text: Hi! Thanks for visiting my profile. Feel free to ask me anything.
+                    - paragraph [ref=e70]: 06:04 PM
+                  - generic [ref=e72]:
+                    - text: Hello there!
+                    - paragraph [ref=e73]: 06:04 PM
+                  - generic [ref=e74]:
+                    - img [ref=e75]
+                    - generic [ref=e78]: Typing...
+                - generic [ref=e80]:
+                  - textbox "Ask about family, hobbies, etc..." [ref=e81]
+                  - button "Send message" [disabled] [ref=e82]:
+                    - img [ref=e83]
+          - generic [ref=e86]:
+            - generic [ref=e87]:
+              - paragraph [ref=e88]: Religion
+              - paragraph [ref=e89]: Buddhist
+            - generic [ref=e90]:
+              - paragraph [ref=e91]: Caste
+              - paragraph [ref=e92]: Govigama
+            - generic [ref=e93]:
+              - paragraph [ref=e94]: Height
+              - paragraph [ref=e95]: 5' 4"
+            - generic [ref=e96]:
+              - paragraph [ref=e97]: Education
+              - paragraph [ref=e98]: Bachelors Degree
+            - generic [ref=e99]:
+              - paragraph [ref=e100]: Occupation
+              - paragraph [ref=e101]: Software Engineer
+        - generic [ref=e102]:
+          - heading "About Me" [level=2] [ref=e103]
+          - paragraph [ref=e104]: I am a kind and ambitious person looking for a partner who values tradition and family. I enjoy cooking traditional Sri Lankan dishes and traveling.
+        - generic [ref=e105]:
+          - heading "Family Details" [level=2] [ref=e106]
+          - paragraph [ref=e107]: Father is a retired teacher, Mother is a housewife. I have one younger brother.
+        - generic [ref=e108]:
+          - heading "Partner Preferences" [level=2] [ref=e109]
+          - paragraph [ref=e110]: Looking for a professionally qualified partner between 25-30 years, preferably from Colombo or suburbs.
+  - contentinfo [ref=e111]:
+    - generic [ref=e112]:
+      - generic [ref=e113]:
+        - generic [ref=e114]:
+          - link "Sithumina" [ref=e115]:
+            - /url: /
+          - paragraph [ref=e116]: Sri Lanka's most trusted matrimonial service. We help you find your perfect life partner with cultural values at heart.
+        - generic [ref=e117]:
+          - heading "Company" [level=3] [ref=e118]
+          - list [ref=e119]:
+            - listitem [ref=e120]:
+              - link "About Us" [ref=e121]:
+                - /url: /about
+            - listitem [ref=e122]:
+              - link "Careers" [ref=e123]:
+                - /url: /careers
+            - listitem [ref=e124]:
+              - link "Blog" [ref=e125]:
+                - /url: /blog
+            - listitem [ref=e126]:
+              - link "Contact" [ref=e127]:
+                - /url: /contact
+        - generic [ref=e128]:
+          - heading "Legal" [level=3] [ref=e129]
+          - list [ref=e130]:
+            - listitem [ref=e131]:
+              - link "Privacy Policy" [ref=e132]:
+                - /url: /privacy
+            - listitem [ref=e133]:
+              - link "Terms of Service" [ref=e134]:
+                - /url: /terms
+            - listitem [ref=e135]:
+              - link "Cookie Policy" [ref=e136]:
+                - /url: /cookies
+        - generic [ref=e137]:
+          - heading "Follow Us" [level=3] [ref=e138]
+          - generic [ref=e139]:
+            - link "Facebook" [ref=e140]:
+              - /url: "#"
+              - generic [ref=e141]: Facebook
+              - img [ref=e142]
+            - link "Instagram" [ref=e144]:
+              - /url: "#"
+              - generic [ref=e145]: Instagram
+              - img [ref=e146]
+            - link "Twitter" [ref=e149]:
+              - /url: "#"
+              - generic [ref=e150]: Twitter
+              - img [ref=e151]
+            - link "LinkedIn" [ref=e153]:
+              - /url: "#"
+              - generic [ref=e154]: LinkedIn
+              - img [ref=e155]
+      - paragraph [ref=e160]: © 2025 Sithumina Matrimony. All rights reserved.
+  - status [ref=e161]:
+    - generic [ref=e162]:
+      - img [ref=e164]
+      - generic [ref=e166]:
+        - text: Static route
+        - button "Hide static indicator" [ref=e167] [cursor=pointer]:
+          - img [ref=e168]
+  - alert [ref=e171]
+```

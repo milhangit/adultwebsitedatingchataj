@@ -1,0 +1,108 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Sithumina" [ref=e6]:
+        - /url: /
+      - button "Open main menu" [ref=e8]:
+        - generic [ref=e9]: Open main menu
+        - img [ref=e10]
+    - generic [ref=e14]:
+      - link "Home" [ref=e15]:
+        - /url: /
+      - link "Search Profiles" [ref=e16]:
+        - /url: /search
+      - link "My Matches" [ref=e17]:
+        - /url: /matches
+      - link "Success Stories" [ref=e18]:
+        - /url: /stories
+      - link "Login / Register" [ref=e21]:
+        - /url: /login
+  - main [ref=e22]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "Sign in to your account" [level=2] [ref=e26]
+        - paragraph [ref=e27]:
+          - text: Or
+          - link "create a new account" [ref=e28]:
+            - /url: /register
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]: Email address
+            - textbox "Email address" [ref=e33]
+          - generic [ref=e34]:
+            - generic [ref=e35]: Password
+            - textbox "Password" [ref=e36]
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - checkbox "Remember me" [ref=e39]
+            - generic [ref=e40]: Remember me
+          - link "Forgot your password?" [ref=e42]:
+            - /url: "#"
+        - button "Sign in" [ref=e44]
+  - contentinfo [ref=e45]:
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - link "Sithumina" [ref=e49]:
+            - /url: /
+          - paragraph [ref=e50]: Sri Lanka's most trusted matrimonial service. We help you find your perfect life partner with cultural values at heart.
+        - generic [ref=e51]:
+          - heading "Company" [level=3] [ref=e52]
+          - list [ref=e53]:
+            - listitem [ref=e54]:
+              - link "About Us" [ref=e55]:
+                - /url: /about
+            - listitem [ref=e56]:
+              - link "Careers" [ref=e57]:
+                - /url: /careers
+            - listitem [ref=e58]:
+              - link "Blog" [ref=e59]:
+                - /url: /blog
+            - listitem [ref=e60]:
+              - link "Contact" [ref=e61]:
+                - /url: /contact
+        - generic [ref=e62]:
+          - heading "Legal" [level=3] [ref=e63]
+          - list [ref=e64]:
+            - listitem [ref=e65]:
+              - link "Privacy Policy" [ref=e66]:
+                - /url: /privacy
+            - listitem [ref=e67]:
+              - link "Terms of Service" [ref=e68]:
+                - /url: /terms
+            - listitem [ref=e69]:
+              - link "Cookie Policy" [ref=e70]:
+                - /url: /cookies
+        - generic [ref=e71]:
+          - heading "Follow Us" [level=3] [ref=e72]
+          - generic [ref=e73]:
+            - link "Facebook" [ref=e74]:
+              - /url: "#"
+              - generic [ref=e75]: Facebook
+              - img [ref=e76]
+            - link "Instagram" [ref=e78]:
+              - /url: "#"
+              - generic [ref=e79]: Instagram
+              - img [ref=e80]
+            - link "Twitter" [ref=e83]:
+              - /url: "#"
+              - generic [ref=e84]: Twitter
+              - img [ref=e85]
+            - link "LinkedIn" [ref=e87]:
+              - /url: "#"
+              - generic [ref=e88]: LinkedIn
+              - img [ref=e89]
+      - paragraph [ref=e94]: © 2025 Sithumina Matrimony. All rights reserved.
+  - status [ref=e95]:
+    - generic [ref=e96]:
+      - img [ref=e98]
+      - generic [ref=e100]:
+        - text: Static route
+        - button "Hide static indicator" [ref=e101] [cursor=pointer]:
+          - img [ref=e102]
+  - alert [ref=e105]
+```

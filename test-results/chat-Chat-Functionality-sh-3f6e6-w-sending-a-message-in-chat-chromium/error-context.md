@@ -1,0 +1,171 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Sithumina" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - navigation [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: /
+        - link "Search Profiles" [ref=e9] [cursor=pointer]:
+          - /url: /search
+        - link "My Matches" [ref=e10] [cursor=pointer]:
+          - /url: /matches
+        - link "Success Stories" [ref=e11] [cursor=pointer]:
+          - /url: /stories
+      - generic [ref=e12]:
+        - link [ref=e13] [cursor=pointer]:
+          - /url: /search
+          - img [ref=e14]
+        - link "2" [ref=e17] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e18]
+          - generic [ref=e20]: "2"
+        - link [ref=e21] [cursor=pointer]:
+          - /url: /profile
+          - img [ref=e22]
+        - link "Login" [ref=e25] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e26]:
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - img "Dilani" [ref=e33]
+          - generic [ref=e34]:
+            - img "Gallery" [ref=e36] [cursor=pointer]
+            - img "Gallery" [ref=e38] [cursor=pointer]
+            - img "Gallery" [ref=e40] [cursor=pointer]
+        - generic [ref=e41]:
+          - heading "Verification Status" [level=3] [ref=e42]
+          - generic [ref=e43]:
+            - img [ref=e44]
+            - generic [ref=e46]: ID Verified
+          - generic [ref=e47]:
+            - img [ref=e48]
+            - generic [ref=e51]: Phone Verified
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - heading "Dilani, 24" [level=1] [ref=e56]:
+                - text: Dilani, 24
+                - img [ref=e57]
+              - paragraph [ref=e59]:
+                - img [ref=e60]
+                - text: Colombo
+            - generic [ref=e63]:
+              - button [ref=e64]:
+                - img [ref=e65]
+              - button "Close Chat" [ref=e67]:
+                - img [ref=e68]
+                - text: Close Chat
+              - generic [ref=e71]:
+                - generic [ref=e73]:
+                  - img [ref=e75]
+                  - generic [ref=e78]:
+                    - heading "Dilani" [level=3] [ref=e79]
+                    - paragraph [ref=e80]: Online
+                - generic [ref=e82]:
+                  - generic [ref=e84]:
+                    - text: Hi! Thanks for visiting my profile. Feel free to ask me anything.
+                    - paragraph [ref=e85]: 06:04 PM
+                  - generic [ref=e87]:
+                    - text: Hello there!
+                    - paragraph [ref=e88]: 06:04 PM
+                  - generic [ref=e89]:
+                    - img [ref=e90]
+                    - generic [ref=e93]: Typing...
+                - generic [ref=e95]:
+                  - textbox "Ask about family, hobbies, etc..." [ref=e96]
+                  - button "Send message" [disabled] [ref=e97]:
+                    - img [ref=e98]
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - paragraph [ref=e103]: Religion
+              - paragraph [ref=e104]: Buddhist
+            - generic [ref=e105]:
+              - paragraph [ref=e106]: Caste
+              - paragraph [ref=e107]: Govigama
+            - generic [ref=e108]:
+              - paragraph [ref=e109]: Height
+              - paragraph [ref=e110]: 5' 4"
+            - generic [ref=e111]:
+              - paragraph [ref=e112]: Education
+              - paragraph [ref=e113]: Bachelors Degree
+            - generic [ref=e114]:
+              - paragraph [ref=e115]: Occupation
+              - paragraph [ref=e116]: Software Engineer
+        - generic [ref=e117]:
+          - heading "About Me" [level=2] [ref=e118]
+          - paragraph [ref=e119]: I am a kind and ambitious person looking for a partner who values tradition and family. I enjoy cooking traditional Sri Lankan dishes and traveling.
+        - generic [ref=e120]:
+          - heading "Family Details" [level=2] [ref=e121]
+          - paragraph [ref=e122]: Father is a retired teacher, Mother is a housewife. I have one younger brother.
+        - generic [ref=e123]:
+          - heading "Partner Preferences" [level=2] [ref=e124]
+          - paragraph [ref=e125]: Looking for a professionally qualified partner between 25-30 years, preferably from Colombo or suburbs.
+  - contentinfo [ref=e126]:
+    - generic [ref=e127]:
+      - generic [ref=e128]:
+        - generic [ref=e129]:
+          - link "Sithumina" [ref=e130] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=e131]: Sri Lanka's most trusted matrimonial service. We help you find your perfect life partner with cultural values at heart.
+        - generic [ref=e132]:
+          - heading "Company" [level=3] [ref=e133]
+          - list [ref=e134]:
+            - listitem [ref=e135]:
+              - link "About Us" [ref=e136] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e137]:
+              - link "Careers" [ref=e138] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e139]:
+              - link "Blog" [ref=e140] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e141]:
+              - link "Contact" [ref=e142] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e143]:
+          - heading "Legal" [level=3] [ref=e144]
+          - list [ref=e145]:
+            - listitem [ref=e146]:
+              - link "Privacy Policy" [ref=e147] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e148]:
+              - link "Terms of Service" [ref=e149] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e150]:
+              - link "Cookie Policy" [ref=e151] [cursor=pointer]:
+                - /url: /cookies
+        - generic [ref=e152]:
+          - heading "Follow Us" [level=3] [ref=e153]
+          - generic [ref=e154]:
+            - link "Facebook" [ref=e155] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e156]: Facebook
+              - img [ref=e157]
+            - link "Instagram" [ref=e159] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e160]: Instagram
+              - img [ref=e161]
+            - link "Twitter" [ref=e164] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e165]: Twitter
+              - img [ref=e166]
+            - link "LinkedIn" [ref=e168] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e169]: LinkedIn
+              - img [ref=e170]
+      - paragraph [ref=e175]: © 2025 Sithumina Matrimony. All rights reserved.
+  - status [ref=e176]:
+    - generic [ref=e177]:
+      - img [ref=e179]
+      - generic [ref=e181]:
+        - text: Static route
+        - button "Hide static indicator" [ref=e182] [cursor=pointer]:
+          - img [ref=e183]
+  - alert [ref=e186]
+```

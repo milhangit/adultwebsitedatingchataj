@@ -1,0 +1,116 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Sithumina" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - navigation [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: /
+        - link "Search Profiles" [ref=e9] [cursor=pointer]:
+          - /url: /search
+        - link "My Matches" [ref=e10] [cursor=pointer]:
+          - /url: /matches
+        - link "Success Stories" [ref=e11] [cursor=pointer]:
+          - /url: /stories
+      - generic [ref=e12]:
+        - link [ref=e13] [cursor=pointer]:
+          - /url: /search
+          - img [ref=e14]
+        - link "2" [ref=e17] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e18]
+          - generic [ref=e20]: "2"
+        - link [ref=e21] [cursor=pointer]:
+          - /url: /profile
+          - img [ref=e22]
+        - link "Login" [active] [ref=e25] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e26]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - heading "Sign in to your account" [level=2] [ref=e30]
+        - paragraph [ref=e31]:
+          - text: Or
+          - link "create a new account" [ref=e32] [cursor=pointer]:
+            - /url: /register
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]: Email address
+            - textbox "Email address" [ref=e37]
+          - generic [ref=e38]:
+            - generic [ref=e39]: Password
+            - textbox "Password" [ref=e40]
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - checkbox "Remember me" [ref=e43]
+            - generic [ref=e44]: Remember me
+          - link "Forgot your password?" [ref=e46] [cursor=pointer]:
+            - /url: "#"
+        - button "Sign in" [ref=e48]
+  - contentinfo [ref=e49]:
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - link "Sithumina" [ref=e53] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=e54]: Sri Lanka's most trusted matrimonial service. We help you find your perfect life partner with cultural values at heart.
+        - generic [ref=e55]:
+          - heading "Company" [level=3] [ref=e56]
+          - list [ref=e57]:
+            - listitem [ref=e58]:
+              - link "About Us" [ref=e59] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e60]:
+              - link "Careers" [ref=e61] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e62]:
+              - link "Blog" [ref=e63] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e64]:
+              - link "Contact" [ref=e65] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e66]:
+          - heading "Legal" [level=3] [ref=e67]
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - link "Privacy Policy" [ref=e70] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e71]:
+              - link "Terms of Service" [ref=e72] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e73]:
+              - link "Cookie Policy" [ref=e74] [cursor=pointer]:
+                - /url: /cookies
+        - generic [ref=e75]:
+          - heading "Follow Us" [level=3] [ref=e76]
+          - generic [ref=e77]:
+            - link "Facebook" [ref=e78] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e79]: Facebook
+              - img [ref=e80]
+            - link "Instagram" [ref=e82] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e83]: Instagram
+              - img [ref=e84]
+            - link "Twitter" [ref=e87] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e88]: Twitter
+              - img [ref=e89]
+            - link "LinkedIn" [ref=e91] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e92]: LinkedIn
+              - img [ref=e93]
+      - paragraph [ref=e98]: © 2025 Sithumina Matrimony. All rights reserved.
+  - status [ref=e99]:
+    - generic [ref=e100]:
+      - img [ref=e102]
+      - generic [ref=e104]:
+        - text: Static route
+        - button "Hide static indicator" [ref=e105] [cursor=pointer]:
+          - img [ref=e106]
+  - alert [ref=e109]
+```
