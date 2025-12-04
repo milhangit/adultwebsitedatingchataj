@@ -5,8 +5,8 @@ pages_build_output_dir = ".next"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "sithumina-db"
-database_id = "YOUR_DATABASE_ID" # User to replace this
+database_name = "datesl-db"
+database_id = "6bb2be2a-5ed4-47bd-93f3-6a140869c0a0"
 
 [[r2_buckets]]
 binding = "R2"

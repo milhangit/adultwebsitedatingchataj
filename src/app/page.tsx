@@ -119,34 +119,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats / Trust Section */}
-      <section className="bg-white py-12 border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <div className="bg-teal-50 p-4 rounded-full mb-4 text-primary">
-                <Shield className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">100% Verified Profiles</h3>
-              <p className="text-gray-500 mt-2">We manually screen every profile to ensure safety.</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-teal-50 p-4 rounded-full mb-4 text-primary">
-                <Heart className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">Thousands of Matches</h3>
-              <p className="text-gray-500 mt-2">Connecting hearts across Sri Lanka every day.</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-teal-50 p-4 rounded-full mb-4 text-primary">
-                <MessageCircle className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">AI-Powered Chat</h3>
-              <p className="text-gray-500 mt-2">Get to know matches better with our smart assistant.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* Featured Profiles */}
       <section className="py-20 bg-gray-50">
