@@ -1,4 +1,4 @@
-import { getDB } from '../../utils/db';
+import { getDB } from '../utils/db';
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
     const { request } = context;
