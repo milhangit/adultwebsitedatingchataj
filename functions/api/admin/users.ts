@@ -65,6 +65,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
                 await db.prepare('DELETE FROM profiles WHERE id = ?').bind(id).run();
             }
             return new Response(JSON.stringify({ success: true }), { headers: { 'Content-Type': 'application/json' } });
+        } else if (action === 'toggle_online') {
+            const { id, is_online } = body;
+            await db.prepare('UPDATE profiles SET is_online = ? WHERE id = ?').bind(is_online ? 1 : 0, id).run();
+            return new Response(JSON.stringify({ success: true }), { headers: { 'Content-Type': 'application/json' } });
         } else if (action === 'create') {
             const { profile } = body;
             const { name, age, gender, location, occupation, height, education, imageUrl, bio, family, preferences, religion, caste, email } = profile;

@@ -1,0 +1,10 @@
+
+
+--- Testing Base URL: http://api.adsterratools.com/publisher/3a2c2a04e69f8c8b5c9959b92c2ccfb8 ---
+--- Testing Websites Endpoint ---
+Error testing url: http://api.adsterratools.com/publisher/3a2c2a04e69f8c8b5c9959b92c2ccfb8 fetch failed
+
+
+--- Testing Base URL: https://api3.adsterratools.com/publisher/3a2c2a04e69f8c8b5c9959b92c2ccfb8 ---
+--- Testing Websites Endpoint ---
+Failed to fetch websites: 404 Not Found

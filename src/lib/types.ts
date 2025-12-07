@@ -14,4 +14,5 @@ export interface Profile {
     family?: string;
     preferences?: string;
     images?: string[];
+    is_online?: boolean;
 }

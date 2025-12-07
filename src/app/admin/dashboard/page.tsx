@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Users, FileText, MessageSquare, BarChart, LogOut, Check, X, Search } from 'lucide-react';
+import { Users, FileText, MessageSquare, BarChart, LogOut, Check, X, Search, AlertTriangle, Trash2, Ban, CheckCircle, XCircle, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -15,6 +15,8 @@ export default function AdminDashboard() {
     const [reports, setReports] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [chatLogs, setChatLogs] = useState<any[]>([]);
+    const [registeredUsers, setRegisteredUsers] = useState<any[]>([]);
+    const [adStats, setAdStats] = useState<any>({});
 
     const handleLogout = () => {
         document.cookie = "admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
@@ -24,17 +26,21 @@ export default function AdminDashboard() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [usersRes, reportsRes, statsRes, chatRes] = await Promise.all([
+            const [usersRes, reportsRes, statsRes, chatRes, guestsRes, adStatsRes] = await Promise.all([
                 apiFetch('/api/admin/users?status=all'),
                 apiFetch('/api/admin/reports'),
                 apiFetch('/api/admin/stats'),
-                apiFetch('/api/admin/chat')
+                apiFetch('/api/admin/chat'),
+                apiFetch('/api/admin/guests'),
+                apiFetch('/api/admin/adsterra')
             ]);
 
             if (usersRes.ok) setPendingUsers(await usersRes.json());
             if (reportsRes.ok) setReports(await reportsRes.json());
             if (statsRes.ok) setStats(await statsRes.json());
             if (chatRes.ok) setChatLogs(await chatRes.json());
+            if (guestsRes.ok) setRegisteredUsers(await guestsRes.json());
+            if (adStatsRes.ok) setAdStats(await adStatsRes.json());
         } catch (error) {
             console.error('Error fetching admin data:', error);
         } finally {
@@ -63,6 +69,21 @@ export default function AdminDashboard() {
             }
         } catch (error) {
             console.error('Error updating user:', error);
+        }
+    };
+
+    const handleToggleOnline = async (id: number, currentStatus: boolean) => {
+        try {
+            const res = await apiFetch('/api/admin/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'toggle_online', id, is_online: !currentStatus })
+            });
+            if (res.ok) {
+                fetchData();
+            }
+        } catch (error) {
+            console.error('Error toggling online status:', error);
         }
     };
 
@@ -247,12 +268,27 @@ export default function AdminDashboard() {
                     </button>
                     <button
                         onClick={() => setActiveTab('online')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'online' ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-50'}`}
+                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'online' ? 'bg-primary text-white shadow-md' : 'text-gray-600 hover:bg-gray-100'}`}
                     >
-                        <div className="w-5 h-5 flex items-center justify-center">
-                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>
-                        </div>
-                        Online Users
+                        <span className="relative flex h-3 w-3 mr-1">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                        </span>
+                        <span className="font-medium">Online Users</span>
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('registered')}
+                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'registered' ? 'bg-primary text-white shadow-md' : 'text-gray-600 hover:bg-gray-100'}`}
+                    >
+                        <Users className="w-5 h-5" />
+                        <span className="font-medium">Registered Users</span>
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('monetization')}
+                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'monetization' ? 'bg-primary text-white shadow-md' : 'text-gray-600 hover:bg-gray-100'}`}
+                    >
+                        <TrendingUp className="w-5 h-5" />
+                        <span className="font-medium">Monetization</span>
                     </button>
                     <button
                         onClick={() => setActiveTab('reports')}
@@ -323,9 +359,17 @@ export default function AdminDashboard() {
                                                             </div>
                                                         </td>
                                                         <td className="px-6 py-4">
-                                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.isVerified ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                                                                {user.isVerified ? 'Verified' : 'Pending'}
-                                                            </span>
+                                                            <div className="flex flex-col gap-2">
+                                                                <span className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${user.isVerified ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                                                    {user.isVerified ? 'Verified' : 'Pending'}
+                                                                </span>
+                                                                <button
+                                                                    onClick={() => handleToggleOnline(user.id, user.is_online)}
+                                                                    className={`px-2 py-1 rounded-full text-xs font-medium w-fit border ${user.is_online ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-500 border-gray-200'}`}
+                                                                >
+                                                                    {user.is_online ? '● Online' : '○ Offline'}
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                         <td className="px-6 py-4 text-gray-500">{new Date(user.created_at).toLocaleDateString()}</td>
                                                         <td className="px-6 py-4 text-right space-x-2">
@@ -406,6 +450,156 @@ export default function AdminDashboard() {
                                     </div>
                                     <div className="p-6 text-center text-gray-500">
                                         Feature coming soon: Real-time online status tracking.
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'registered' && (
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">Registered Users Listing</h2>
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr className="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-medium">
+                                                    <th className="px-6 py-4">User</th>
+                                                    <th className="px-6 py-4">Phone</th>
+                                                    <th className="px-6 py-4">IP Address</th>
+                                                    <th className="px-6 py-4">Location</th>
+                                                    <th className="px-6 py-4">Device</th>
+                                                    <th className="px-6 py-4">Registered</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-200">
+                                                {registeredUsers.length === 0 ? (
+                                                    <tr>
+                                                        <td colSpan={6} className="px-6 py-8 text-center text-gray-500">No registered users found.</td>
+                                                    </tr>
+                                                ) : (
+                                                    registeredUsers.map((user: any) => (
+                                                        <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                                                            <td className="px-6 py-4">
+                                                                <div className="flex items-center gap-3">
+                                                                    {user.image_url ? (
+                                                                        <img src={user.image_url} alt="" className="w-10 h-10 rounded-full object-cover border border-gray-200" />
+                                                                    ) : (
+                                                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+                                                                            <Users className="w-5 h-5" />
+                                                                        </div>
+                                                                    )}
+                                                                    <div>
+                                                                        <p className="font-medium text-gray-900">{user.name || 'Anonymous'}</p>
+                                                                        <p className="text-xs text-gray-400">ID: {user.user_id?.substring(0, 8)}...</p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-4 text-gray-600">{user.phone || '-'}</td>
+                                                            <td className="px-6 py-4 text-gray-600 font-mono text-xs">{user.ip_address || 'Unknown'}</td>
+                                                            <td className="px-6 py-4 text-gray-600">
+                                                                {user.city && user.country ? `${user.city}, ${user.country}` : (user.country || 'Unknown')}
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${user.device_type === 'Mobile' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600'}`}>
+                                                                    {user.device_type || 'Desktop'}
+                                                                </span>
+                                                                <div className="text-[10px] text-gray-400 mt-1 max-w-[150px] truncate" title={user.user_agent}>
+                                                                    {user.user_agent}
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                                                {new Date(user.created_at).toLocaleString()}
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'monetization' && (
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                    Adsterra Monetization
+                                    {/* @ts-ignore */}
+                                    {adStats._is_mock && (
+                                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-normal border border-yellow-200">
+                                            Mock Data (API Connecting...)
+                                        </span>
+                                    )}
+                                </h2>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-sm font-medium text-gray-500">Current Balance</h3>
+                                            <div className="p-2 bg-green-100 rounded-lg">
+                                                <span className="text-green-600 text-xl font-bold">$</span>
+                                            </div>
+                                        </div>
+                                        {/* @ts-ignore */}
+                                        <p className="text-3xl font-bold text-gray-900">${adStats.totals?.revenue || '0.00'}</p>
+                                        <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
+                                            Last 30 Days
+                                        </p>
+                                    </div>
+
+                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-sm font-medium text-gray-500">Impressions</h3>
+                                            <div className="p-2 bg-blue-100 rounded-lg">
+                                                <TrendingUp className="w-5 h-5 text-blue-600" />
+                                            </div>
+                                        </div>
+                                        {/* @ts-ignore */}
+                                        <p className="text-3xl font-bold text-gray-900">{adStats.totals?.impressions?.toLocaleString() || '0'}</p>
+                                        <p className="text-sm text-gray-500 mt-2">Ad Views</p>
+                                    </div>
+
+                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-sm font-medium text-gray-500">Clicks</h3>
+                                            <div className="p-2 bg-purple-100 rounded-lg">
+                                                <span className="text-purple-600 font-bold">🖱️</span>
+                                            </div>
+                                        </div>
+                                        {/* @ts-ignore */}
+                                        <p className="text-3xl font-bold text-gray-900">{adStats.totals?.clicks?.toLocaleString() || '0'}</p>
+                                        <p className="text-sm text-gray-500 mt-2">
+                                            {/* @ts-ignore */}
+                                            CTR: {adStats.totals?.ctr || '0'}%
+                                        </p>
+                                    </div>
+
+                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-sm font-medium text-gray-500">eCPM</h3>
+                                            <div className="p-2 bg-orange-100 rounded-lg">
+                                                <span className="text-orange-600 font-bold">M</span>
+                                            </div>
+                                        </div>
+                                        {/* @ts-ignore */}
+                                        <p className="text-3xl font-bold text-gray-900">${adStats.totals?.cpm || '0.00'}</p>
+                                        <p className="text-sm text-gray-500 mt-2">Avg. Cost Per Mille</p>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4">Ad Placement Codes</h3>
+                                    <div className="space-y-4">
+                                        <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="font-semibold text-gray-700">Native Banner (Recommended)</span>
+                                                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Active</span>
+                                            </div>
+                                            <code className="block text-xs text-gray-600 font-mono break-all">
+                                                &lt;script async="async" data-cfasync="false" src="//pl12345678.highcpmgate.com/..."&gt;&lt;/script&gt;
+                                            </code>
+                                            <p className="text-xs text-gray-500 mt-2">Place this code in your site using the "Ads" component (coming soon).</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

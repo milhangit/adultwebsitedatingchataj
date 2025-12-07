@@ -1,0 +1,38 @@
+--- Testing Websites Endpoint ---
+Error: TypeError: fetch failed
+    at node:internal/deps/undici/undici:15845:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async testApi (/Users/milhanmohideen/adultwebsitedatingchataj/test_adsterra.ts:8:29) {
+  [cause]: Error [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames: Host: api.adsterratools.com. is not in the cert's altnames: DNS:*.developzilla.com, DNS:developzilla.com
+      at Object.checkServerIdentity (node:tls:455:12)
+      at TLSSocket.onConnectSecure (node:internal/tls/wrap:1640:27)
+      at TLSSocket.emit (node:events:508:28)
+      at TLSSocket._finishInit (node:internal/tls/wrap:1076:8)
+      at ssl.onhandshakedone (node:internal/tls/wrap:862:12) {
+    code: 'ERR_TLS_CERT_ALTNAME_INVALID',
+    reason: "Host: api.adsterratools.com. is not in the cert's altnames: DNS:*.developzilla.com, DNS:developzilla.com",
+    host: 'api.adsterratools.com',
+    cert: {
+      subject: [Object: null prototype],
+      issuer: [Object: null prototype],
+      subjectaltname: 'DNS:*.developzilla.com, DNS:developzilla.com',
+      infoAccess: [Object: null prototype],
+      ca: false,
+      modulus: '9DC078FDBE2A8F4B8CBA556BF811F10D8E70CB4CE2489683F9472FD0DCB64679CFA8F24791D05486C7B888104FE5043BCBC614C8196B4D97F2364F403FA166F0BA2F26D661071CA599878DEA6FBB3E1DB847EECD3C27576CAE11F61C93D42A4916D4C84A82DC47158FF42CD5A794A9CA04E8BDB3D2E031D53018F5236E38440AC1C4E9F995D963ABE42B5CBE2D3EEB4408DADEF55AD0E263163623750394EFFB8EFDFB46FDD17935BC21514643AF53B4284FB887E1462E2EFFAAE5BA620AE460E7A6BBEF2B96C367BDE7CE814594F54D12264C92D7A7FEB5C959349C4893DF5A55D6B95EF4AF0661E2528FB33271EB55A9E590C434C642E84A9EBA6009214DC9',
+      exponent: '0x10001',
+      pubkey: <Buffer 30 82 01 22 30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 03 82 01 0f 00 30 82 01 0a 02 82 01 01 00 9d c0 78 fd be 2a 8f 4b 8c ba 55 6b f8 11 f1 0d 8e ... 244 more bytes>,
+      bits: 2048,
+      valid_from: 'Nov  4 20:50:56 2025 GMT',
+      valid_to: 'Feb  2 20:50:55 2026 GMT',
+      fingerprint: '56:60:79:CA:5B:CF:3E:9B:A4:EB:EB:ED:E7:CB:52:45:1F:D4:CE:9E',
+      fingerprint256: '45:7F:81:93:3E:60:EF:8D:45:16:D2:CF:48:39:17:B3:DB:F5:C6:0D:38:E9:DF:BC:4A:CA:D3:C0:2C:D2:4D:0F',
+      fingerprint512: '7F:38:9B:3F:C6:49:E3:73:70:C6:F9:24:49:0C:48:7D:30:AF:2B:B0:8A:C1:56:A8:16:38:B4:A4:43:E7:DE:4E:DB:05:67:55:F1:41:36:A0:9E:27:40:00:2F:1D:8F:BB:30:FE:D7:54:6C:56:65:1F:CE:2B:9B:49:75:2F:78:33',
+      ext_key_usage: [Array],
+      serialNumber: '06C0B1836C79AE0071ED20DC8F2533D50C8B',
+      raw: <Buffer 30 82 05 0f 30 82 03 f7 a0 03 02 01 02 02 12 06 c0 b1 83 6c 79 ae 00 71 ed 20 dc 8f 25 33 d5 0c 8b 30 0d 06 09 2a 86 48 86 f7 0d 01 01 0b 05 00 30 33 ... 1249 more bytes>,
+      asn1Curve: undefined,
+      nistCurve: undefined,
+      issuerCertificate: [Object]
+    }
+  }
+}

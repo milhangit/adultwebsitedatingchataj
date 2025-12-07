@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -10,17 +10,18 @@ const inter = Inter({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#ec4899",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
   title: "Sithumina - Find Your Life Partner in Sri Lanka",
   description: "Sri Lanka's most trusted matrimonial service. Connect with genuine profiles and find your soulmate today.",
   manifest: "/manifest.json",
-  themeColor: "#ec4899",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false, // Prevent zooming on mobile for app-like feel
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

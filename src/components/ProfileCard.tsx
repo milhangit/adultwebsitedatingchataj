@@ -12,6 +12,7 @@ interface ProfileProps {
     education: string;
     imageUrl: string;
     isVerified?: boolean;
+    is_online?: boolean;
 }
 
 export default function ProfileCard({ profile }: { profile: ProfileProps }) {
@@ -24,7 +25,18 @@ export default function ProfileCard({ profile }: { profile: ProfileProps }) {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                <div className="absolute top-3 right-3 z-10">
+                    {profile.is_online && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-500 text-white shadow-sm ring-1 ring-white/20 backdrop-blur-md">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                            </span>
+                            Online
+                        </span>
+                    )}
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent md:to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <div className="w-full flex gap-2">
                         <Link
                             href={`/profile?id=${profile.id}`}

@@ -9,7 +9,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         const { results } = await env.DB.prepare(`
             SELECT m.*, p.name as profile_name 
             FROM messages m 
-            JOIN profiles p ON m.receiver_id = p.id 
+            JOIN profiles p ON m.profile_id = p.id 
             ORDER BY m.created_at DESC 
             LIMIT 50
         `).all();

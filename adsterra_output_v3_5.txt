@@ -1,0 +1,28 @@
+--- Testing Adsterra API Variations (Websites) ---
+
+Testing: https://api3.adsterratools.com/publisher/websites.json
+Status: 404 Not Found
+Body: {"message":"Not Found"}
+
+Testing: https://api3.adsterratools.com/publisher/websites
+Status: 404 Not Found
+Body: {"message":"Not Found"}
+
+Testing: https://api3.adsterratools.com/publisher/3a2c2a04e69f8c8b5c9959b92c2ccfb8/websites.json
+Status: 404 Not Found
+Body: {"message":"Not Found"}
+
+Testing: https://api3.adsterratools.com/publisher/3a2c2a04e69f8c8b5c9959b92c2ccfb8/websites
+Status: 404 Not Found
+Body: {"message":"Not Found"}
+
+Testing: https://api3.adsterratools.com/v3/publisher/websites.json
+Status: 404 Not Found
+Body: {"message":"Not Found"}
+
+Testing: https://api3.adsterratools.com/v3/publisher/websites
+Status: 404 Not Found
+Body: {"message":"Not Found"}
+
+Testing: https://publisher.adsterratools.com/api/v1/websites
+Error: fetch failed

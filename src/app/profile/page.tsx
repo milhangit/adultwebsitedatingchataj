@@ -122,6 +122,11 @@ function ProfileContent() {
                                     <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
                                         {profile.name}, {profile.age}
                                         {profile.isVerified && <Shield className="w-6 h-6 text-blue-500" fill="currentColor" fillOpacity={0.2} />}
+                                        {profile.is_online && (
+                                            <span className="ml-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-500 text-white animate-pulse">
+                                                Online
+                                            </span>
+                                        )}
                                     </h1>
                                     <p className="text-gray-500 flex items-center gap-2 mt-2">
                                         <MapPin className="w-4 h-4" /> {profile.location}

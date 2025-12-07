@@ -30,7 +30,7 @@ export default function Home() {
 
     // Paywall Logic
     const freeUsageCount = parseInt(localStorage.getItem('free_usage_count') || '0');
-    const MAX_FREE_USAGE = 3; // Show paywall after 3 visits/actions
+    const MAX_FREE_USAGE = 10; // Show paywall after 10 visits/actions
 
     if (!userId) {
       const newCount = freeUsageCount + 1;

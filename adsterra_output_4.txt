@@ -1,0 +1,30 @@
+
+
+--- Testing https://api3.adsterratools.com/publisher/3a2c2a04e69f8c8b5c9959b92c2ccfb8/websites 
+Headers: {} ---
+Failed: 404 Not Found
+
+
+--- Testing https://api3.adsterratools.com/v1/publisher/3a2c2a04e69f8c8b5c9959b92c2ccfb8/websites 
+Headers: {} ---
+Failed: 404 Not Found
+
+
+--- Testing https://api3.adsterratools.com/api/v1/publisher/3a2c2a04e69f8c8b5c9959b92c2ccfb8/websites 
+Headers: {} ---
+Failed: 404 Not Found
+
+
+--- Testing https://api3.adsterratools.com/publisher/websites 
+Headers: {"X-API-Key":"3a2c2a04e69f8c8b5c9959b92c2ccfb8"} ---
+Failed: 404 Not Found
+
+
+--- Testing https://api3.adsterratools.com/v1/publisher/websites 
+Headers: {"X-API-Key":"3a2c2a04e69f8c8b5c9959b92c2ccfb8"} ---
+Failed: 404 Not Found
+
+
+--- Testing https://publisher.adsterra.com/api/v1/websites 
+Headers: {"X-API-Key":"3a2c2a04e69f8c8b5c9959b92c2ccfb8","Authorization":"Bearer 3a2c2a04e69f8c8b5c9959b92c2ccfb8"} ---
+Error: fetch failed
