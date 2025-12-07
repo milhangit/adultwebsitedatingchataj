@@ -156,14 +156,14 @@ export default function AdminDashboard() {
                     <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         <h2 className="text-xl font-bold mb-4">Create AI User</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" placeholder="Name" value={newUser.name} onChange={e => setNewUser({ ...newUser, name: e.target.value })} className="p-2 border rounded" />
-                            <input type="number" placeholder="Age" value={newUser.age} onChange={e => setNewUser({ ...newUser, age: parseInt(e.target.value) })} className="p-2 border rounded" />
-                            <select value={newUser.gender} onChange={e => setNewUser({ ...newUser, gender: e.target.value })} className="p-2 border rounded">
+                            <input type="text" placeholder="Name" value={newUser.name} onChange={e => setNewUser({ ...newUser, name: e.target.value })} className="p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-400" />
+                            <input type="number" placeholder="Age" value={newUser.age} onChange={e => setNewUser({ ...newUser, age: parseInt(e.target.value) })} className="p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-400" />
+                            <select value={newUser.gender} onChange={e => setNewUser({ ...newUser, gender: e.target.value })} className="p-2 border border-gray-300 rounded text-gray-900 bg-white">
                                 <option value="Woman">Woman</option>
                                 <option value="Man">Man</option>
                             </select>
-                            <input type="text" placeholder="Location" value={newUser.location} onChange={e => setNewUser({ ...newUser, location: e.target.value })} className="p-2 border rounded" />
-                            <input type="text" placeholder="Occupation" value={newUser.occupation} onChange={e => setNewUser({ ...newUser, occupation: e.target.value })} className="p-2 border rounded" />
+                            <input type="text" placeholder="Location" value={newUser.location} onChange={e => setNewUser({ ...newUser, location: e.target.value })} className="p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-400" />
+                            <input type="text" placeholder="Occupation" value={newUser.occupation} onChange={e => setNewUser({ ...newUser, occupation: e.target.value })} className="p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-400" />
 
                             <div className="col-span-1 md:col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
@@ -173,7 +173,7 @@ export default function AdminDashboard() {
                                         placeholder="Image URL (or upload below)"
                                         value={newUser.imageUrl}
                                         onChange={e => setNewUser({ ...newUser, imageUrl: e.target.value })}
-                                        className="flex-1 p-2 border rounded"
+                                        className="flex-1 p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-400"
                                     />
                                     <label className="cursor-pointer bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded text-sm font-medium transition-colors">
                                         {uploading ? 'Uploading...' : 'Upload Photo'}
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
                                 {newUser.imageUrl && <img src={newUser.imageUrl} alt="Preview" className="mt-2 w-16 h-16 rounded-full object-cover border" />}
                             </div>
 
-                            <textarea placeholder="Bio" value={newUser.bio} onChange={e => setNewUser({ ...newUser, bio: e.target.value })} className="p-2 border rounded col-span-2" />
+                            <textarea placeholder="Bio" value={newUser.bio} onChange={e => setNewUser({ ...newUser, bio: e.target.value })} className="p-2 border border-gray-300 rounded col-span-2 text-gray-900 placeholder-gray-400" />
                         </div>
                         <div className="mt-6 flex justify-end gap-3">
                             <button onClick={() => setShowCreateModal(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
@@ -205,10 +205,10 @@ export default function AdminDashboard() {
                                     <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, true)} disabled={uploading} />
                                 </label>
                             </div>
-                            <input type="text" placeholder="Name" value={selectedUser.name} onChange={e => setSelectedUser({ ...selectedUser, name: e.target.value })} className="p-2 border rounded" />
-                            <input type="text" placeholder="Image URL" value={selectedUser.imageUrl} onChange={e => setSelectedUser({ ...selectedUser, imageUrl: e.target.value })} className="p-2 border rounded" />
-                            <input type="text" placeholder="Occupation" value={selectedUser.occupation} onChange={e => setSelectedUser({ ...selectedUser, occupation: e.target.value })} className="p-2 border rounded" />
-                            <textarea placeholder="Bio" value={selectedUser.bio} onChange={e => setSelectedUser({ ...selectedUser, bio: e.target.value })} className="p-2 border rounded col-span-2" />
+                            <input type="text" placeholder="Name" value={selectedUser.name} onChange={e => setSelectedUser({ ...selectedUser, name: e.target.value })} className="p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-400" />
+                            <input type="text" placeholder="Image URL" value={selectedUser.imageUrl} onChange={e => setSelectedUser({ ...selectedUser, imageUrl: e.target.value })} className="p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-400" />
+                            <input type="text" placeholder="Occupation" value={selectedUser.occupation} onChange={e => setSelectedUser({ ...selectedUser, occupation: e.target.value })} className="p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-400" />
+                            <textarea placeholder="Bio" value={selectedUser.bio} onChange={e => setSelectedUser({ ...selectedUser, bio: e.target.value })} className="p-2 border border-gray-300 rounded col-span-2 text-gray-900 placeholder-gray-400" />
                         </div>
                         <div className="mt-6 flex justify-end gap-3">
                             <button onClick={() => setShowEditModal(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
