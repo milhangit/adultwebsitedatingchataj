@@ -255,6 +255,15 @@ export default function Home() {
             <p className="text-xl text-gray-600 leading-relaxed">
               "To create the most trusted and dignified platform for Sri Lankans to find their life partners. We believe in the sanctity of marriage and are committed to providing a safe, secure, and culturally respectful environment where genuine connections can flourish."
             </p>
+
+            <div className="mt-6 space-y-2">
+              <p className="text-sm text-gray-500 font-medium">
+                "ශ්‍රී ලාංකිකයින්ට තම ජීවන සහකරු සොයා ගැනීම සඳහා වඩාත් විශ්වාසවන්ත සහ ගෞරවනීය වේදිකාවක් නිර්මාණය කිරීම."
+              </p>
+              <p className="text-sm text-gray-500 font-medium">
+                "இலங்கையர்கள் தங்கள் வாழ்க்கைத் துணையைத் தேடுவதற்கான மிகவும் நம்பகமான தளம்."
+              </p>
+            </div>
             <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
                 <div className="bg-gray-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
