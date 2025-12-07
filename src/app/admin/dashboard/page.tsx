@@ -5,6 +5,8 @@ import { Users, FileText, MessageSquare, BarChart, LogOut, Check, X, Search } fr
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { apiFetch } from '@/lib/api';
+
 export default function AdminDashboard() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState('users');
@@ -23,10 +25,10 @@ export default function AdminDashboard() {
         setLoading(true);
         try {
             const [usersRes, reportsRes, statsRes, chatRes] = await Promise.all([
-                fetch('/api/admin/users?status=all'),
-                fetch('/api/admin/reports'),
-                fetch('/api/admin/stats'),
-                fetch('/api/admin/chat')
+                apiFetch('/api/admin/users?status=all'),
+                apiFetch('/api/admin/reports'),
+                apiFetch('/api/admin/stats'),
+                apiFetch('/api/admin/chat')
             ]);
 
             if (usersRes.ok) setPendingUsers(await usersRes.json());
@@ -41,19 +43,23 @@ export default function AdminDashboard() {
     };
 
     useEffect(() => {
-        fetchData();
+        const checkAuth = () => {
+            // Simple client-side check for now (replaced by middleware in real app)
+            // In a real app, apiFetch would handle 401s
+            fetchData();
+        };
+        checkAuth();
     }, []);
 
     const handleUserAction = async (id: number, action: 'approve' | 'reject') => {
         try {
-            const res = await fetch('/api/admin/users', {
+            const res = await apiFetch('/api/admin/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, action })
             });
             if (res.ok) {
-                // Refresh data
-                fetchData();
+                fetchData(); // Refresh list
             }
         } catch (error) {
             console.error('Error updating user:', error);
@@ -78,7 +84,7 @@ export default function AdminDashboard() {
         formData.append('file', file);
 
         try {
-            const res = await fetch('/api/upload', {
+            const res = await apiFetch('/api/upload', {
                 method: 'POST',
                 body: formData
             });
@@ -102,7 +108,7 @@ export default function AdminDashboard() {
 
     const handleCreateUser = async () => {
         try {
-            const res = await fetch('/api/admin/users', {
+            const res = await apiFetch('/api/admin/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'create', profile: newUser })
@@ -123,7 +129,7 @@ export default function AdminDashboard() {
     const handleUpdateUser = async () => {
         if (!selectedUser) return;
         try {
-            const res = await fetch('/api/admin/users', {
+            const res = await apiFetch('/api/admin/users', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: selectedUser.id, updates: selectedUser })

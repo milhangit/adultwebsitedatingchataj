@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, X, Minimize2 } from 'lucide-react';
 import clsx from 'clsx';
 import { Profile } from '@/lib/types';
+import { apiFetch } from '@/lib/api';
 
 interface Message {
     id: number;
@@ -42,7 +43,7 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
         // Fetch initial messages
         const fetchMessages = async () => {
             try {
-                const res = await fetch(`/api/messages?profileId=${profile.id}`);
+                const res = await apiFetch(`/api/messages?profileId=${profile.id}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (data.length > 0) {
@@ -77,7 +78,7 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
 
         // Save user message
         try {
-            await fetch('/api/messages', {
+            await apiFetch('/api/messages', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -92,7 +93,7 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
 
         // Call AI API for response
         try {
-            const res = await fetch('/api/chat/generate', {
+            const res = await apiFetch('/api/chat/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -115,7 +116,7 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
                 setIsTyping(false);
 
                 // Save AI message
-                await fetch('/api/messages', {
+                await apiFetch('/api/messages', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

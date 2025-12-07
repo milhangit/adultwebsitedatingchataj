@@ -9,8 +9,10 @@ export default function LoginPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log('Login:', { email, password });
+        // Mock login: Set a fixed user ID for demo purposes
+        // In a real app, this would come from the server after auth
+        localStorage.setItem('user_id', '101'); // ID 101 matches the sender_id in our seed data
+        window.location.href = '/messages';
     };
 
     return (

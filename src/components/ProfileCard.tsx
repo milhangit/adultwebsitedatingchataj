@@ -8,7 +8,7 @@ interface ProfileProps {
     age: number;
     location: string;
     occupation: string;
-    height: string;
+
     education: string;
     imageUrl: string;
     isVerified?: boolean;
@@ -70,10 +70,7 @@ export default function ProfileCard({ profile }: { profile: ProfileProps }) {
                         <GraduationCap className="w-4 h-4 text-gray-400" />
                         <span>{profile.education}</span>
                     </div>
-                    <div className="flex items-center text-sm text-gray-600 gap-2">
-                        <Ruler className="w-4 h-4 text-gray-400" />
-                        <span>{profile.height}</span>
-                    </div>
+
                 </div>
             </div>
         </div>
