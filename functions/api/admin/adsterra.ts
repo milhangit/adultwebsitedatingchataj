@@ -1,51 +1,66 @@
-
 const API_TOKEN = '3a2c2a04e69f8c8b5c9959b92c2ccfb8';
-const BASE_URL = 'https://api3.adsterratools.com/publisher';
+const BASE_URL = 'https://api.publishers.adsterra.com/v3';
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
     try {
+        const urlObj = new URL(context.request.url);
+        const group_by = urlObj.searchParams.get('group_by') || 'date';
+
+        const finishDate = new Date();
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - 30); // Last 30 days
+
         const startStr = startDate.toISOString().split('T')[0];
-        const endStr = new Date().toISOString().split('T')[0];
+        const endStr = finishDate.toISOString().split('T')[0];
 
-        const url = `${BASE_URL}/statistics.json?start_date=${startStr}&finish_date=${endStr}&group_by=date`;
+        // Format: /statistics?start_date=YYYY-MM-DD&finish_date=YYYY-MM-DD&group_by=...
+        const apiUrl = `${BASE_URL}/statistics?start_date=${startStr}&finish_date=${endStr}&group_by=${group_by}`;
 
-        console.log(`Fetching Adsterra stats: ${url}`);
+        console.log(`Fetching Adsterra V3 stats: ${apiUrl}`);
 
-        const res = await fetch(url, {
+        const res = await fetch(apiUrl, {
             headers: {
-                'X-API-Key': API_TOKEN
+                'X-API-Key': API_TOKEN,
+                'Accept': 'application/json'
             }
         });
 
         if (res.ok) {
-            const data = await res.json() as any;
-            return new Response(JSON.stringify(data), {
+            const result = await res.json() as any;
+            // The API returns data in a specific format, we might need to map it if totals aren't present
+            // Based on typical ad network APIs, we sum the items for totals if not provided explicitly
+
+            const stats = result.items || [];
+            const totals = stats.reduce((acc: any, curr: any) => {
+                acc.impressions += Number(curr.impressions || 0);
+                acc.clicks += Number(curr.clicks || 0);
+                acc.revenue += Number(curr.revenue || 0);
+                return acc;
+            }, { impressions: 0, clicks: 0, revenue: 0 });
+
+            totals.ctr = totals.impressions > 0 ? ((totals.clicks / totals.impressions) * 100).toFixed(2) : 0;
+            totals.cpm = totals.impressions > 0 ? ((totals.revenue / totals.impressions) * 1000).toFixed(2) : 0;
+            totals.revenue = totals.revenue.toFixed(2);
+
+            return new Response(JSON.stringify({
+                totals,
+                items: stats,
+                _is_mock: false
+            }), {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
 
-        // Fallback Mock Data if API fails (likely due to 404/Auth issues seen in testing)
-        // This ensures the admin panel UI can be verified and used.
-        console.warn(`Adsterra API failed (${res.status}), returning mock data.`);
+        const errorText = await res.text();
+        console.warn(`Adsterra API failed (${res.status}): ${errorText}`);
 
-        const mockData = {
-            totals: {
-                impressions: 12500,
-                clicks: 342,
-                ctr: 2.73,
-                revenue: 45.20,
-                cpm: 3.61
-            },
-            items: [
-                { date: endStr, impressions: 450, clicks: 12, revenue: 1.50, ctr: 2.6, cpm: 3.33 },
-                { date: startStr, impressions: 400, clicks: 10, revenue: 1.35, ctr: 2.5, cpm: 3.37 }
-            ],
-            _is_mock: true // Flag to indicate mock data in UI
-        };
-
-        return new Response(JSON.stringify(mockData), {
+        // Return fallback if API fails or is not yet configured on Adsterra side
+        return new Response(JSON.stringify({
+            totals: { impressions: 0, clicks: 0, ctr: 0, revenue: 0, cpm: 0 },
+            items: [],
+            error: `API returned ${res.status}: ${errorText}`,
+            _is_mock: true
+        }), {
             headers: { 'Content-Type': 'application/json' }
         });
 

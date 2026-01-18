@@ -1,137 +1,58 @@
 'use client';
 
-import { Suspense, useMemo } from 'react';
+import { Suspense, useMemo, useState, useEffect } from 'react'; // Added useState, useEffect
 import { useSearchParams, useRouter } from 'next/navigation';
 import SearchFilters from '@/components/SearchFilters';
 import ProfileCard from '@/components/ProfileCard';
 import { Profile } from '@/lib/types';
-
-// Mock data for search results
-const searchResults: Profile[] = [
-    {
-        id: 1,
-        name: 'Dilani',
-        age: 24,
-        location: 'Colombo',
-        occupation: 'Software Engineer',
-        height: '5\' 4"',
-        education: 'Bachelors Degree',
-        imageUrl: 'https://placehold.co/400x600?text=Dilani',
-        isVerified: true,
-        religion: 'Buddhist',
-        caste: 'Govigama'
-    },
-    {
-        id: 2,
-        name: 'Sanjay',
-        age: 28,
-        location: 'Kandy',
-        occupation: 'Doctor',
-        height: '5\' 10"',
-        education: 'MBBS',
-        imageUrl: 'https://placehold.co/400x600?text=Sanjay',
-        isVerified: true,
-        religion: 'Buddhist',
-        caste: 'Govigama'
-    },
-    {
-        id: 3,
-        name: 'Fathima',
-        age: 26,
-        location: 'Galle',
-        occupation: 'Teacher',
-        height: '5\' 2"',
-        education: 'Diploma',
-        imageUrl: 'https://placehold.co/400x600?text=Fathima',
-        isVerified: true,
-        religion: 'Muslim',
-        caste: 'Other'
-    },
-    {
-        id: 4,
-        name: 'Roshan',
-        age: 30,
-        location: 'Negombo',
-        occupation: 'Business Owner',
-        height: '5\' 8"',
-        education: 'Masters',
-        imageUrl: 'https://placehold.co/400x600?text=Roshan',
-        isVerified: true,
-        religion: 'Catholic',
-        caste: 'Karava'
-    },
-    {
-        id: 5,
-        name: 'Nishanthi',
-        age: 25,
-        location: 'Kurunegala',
-        occupation: 'Nurse',
-        height: '5\' 3"',
-        education: 'Diploma',
-        imageUrl: 'https://placehold.co/400x600?text=Nishanthi',
-        isVerified: false,
-        religion: 'Buddhist',
-        caste: 'Govigama'
-    },
-    {
-        id: 6,
-        name: 'Pradeep',
-        age: 32,
-        location: 'Colombo',
-        occupation: 'Banker',
-        height: '5\' 9"',
-        education: 'Bachelors',
-        imageUrl: 'https://placehold.co/400x600?text=Pradeep',
-        isVerified: true,
-        religion: 'Buddhist',
-        caste: 'Salagama'
-    }
-];
+import { Filter } from 'lucide-react'; // Added Icon
 
 function SearchContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const [profiles, setProfiles] = useState<Profile[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [total, setTotal] = useState(0);
+    const [showFilters, setShowFilters] = useState(false); // Mobile filter state
 
-    // Get filters from URL
-    const gender = searchParams.get('gender') || 'Woman'; // Default to Woman as per UI
-    const minAge = parseInt(searchParams.get('minAge') || '18');
-    const maxAge = parseInt(searchParams.get('maxAge') || '35');
+    // Get filters from URL for API call
+    const gender = searchParams.get('gender') || 'Woman';
+    const minAge = searchParams.get('minAge') || '18';
+    const maxAge = searchParams.get('maxAge') || '35';
     const location = searchParams.get('location') || 'Any Location';
     const caste = searchParams.get('caste') || 'Any';
-    const religions = searchParams.get('religion')?.split(',') || [];
+    const religion = searchParams.get('religion') || '';
     const page = parseInt(searchParams.get('page') || '1');
     const ITEMS_PER_PAGE = 6;
 
-    // Filter Logic
-    const filteredResults = useMemo(() => {
-        return searchResults.filter(profile => {
-            // Age Filter
-            if (profile.age < minAge || profile.age > maxAge) return false;
+    useEffect(() => {
+        const fetchProfiles = async () => {
+            setLoading(true);
+            try {
+                const params = new URLSearchParams();
+                if (gender) params.set('gender', gender);
+                if (minAge) params.set('minAge', minAge);
+                if (maxAge) params.set('maxAge', maxAge);
+                if (location && location !== 'Any Location') params.set('location', location);
+                if (caste && caste !== 'Any') params.set('caste', caste);
+                if (religion) params.set('religion', religion);
+                params.set('page', page.toString());
 
-            // Location Filter
-            if (location !== 'Any Location' && profile.location !== location) return false;
+                const res = await fetch(`/api/profiles?${params.toString()}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setProfiles(data.profiles || []);
+                    setTotal(data.pagination?.total || 0);
+                }
+            } catch (error) {
+                console.error('Error fetching profiles:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-            // Caste Filter
-            if (caste !== 'Any' && profile.caste !== caste) return false;
-
-            // Religion Filter
-            if (religions.length > 0 && (!profile.religion || !religions.includes(profile.religion))) return false;
-
-            // Gender Filter (Mock data doesn't have gender, assuming names imply gender for now or ignoring)
-            // In a real app, we'd filter by gender. For this mock, we'll skip it or infer.
-            // Let's assume the user wants to see everyone if they don't specify, or we can add gender to mock data.
-            // For now, let's not filter by gender to keep results visible.
-
-            return true;
-        });
-    }, [minAge, maxAge, location, caste, religions]);
-
-    // Pagination Logic
-    const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
-    const paginatedResults = filteredResults.slice(
-        (page - 1) * ITEMS_PER_PAGE,
-        page * ITEMS_PER_PAGE
-    );
+        fetchProfiles();
+    }, [searchParams]);
 
     const handlePageChange = (newPage: number) => {
         const params = new URLSearchParams(searchParams?.toString() || '');
@@ -139,10 +60,23 @@ function SearchContent() {
         router.push(`/search?${params.toString()}`);
     };
 
+    const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+
     return (
-        <div className="flex flex-col lg:flex-row gap-8">
-            {/* Sidebar Filters */}
-            <aside className="w-full lg:w-1/4">
+        <div className="flex flex-col lg:flex-row gap-8 relative">
+            {/* Mobile Filter Toggle */}
+            <div className="lg:hidden mb-4">
+                <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="flex items-center gap-2 bg-white border border-gray-300 px-4 py-2 rounded-lg shadow-sm text-gray-700 font-medium w-full justify-center"
+                >
+                    <Filter className="w-4 h-4" />
+                    {showFilters ? 'Hide Filters' : 'Show Filters'}
+                </button>
+            </div>
+
+            {/* Sidebar Filters - Responsive */}
+            <aside className={`w-full lg:w-1/4 ${showFilters ? 'block' : 'hidden lg:block'}`}>
                 <SearchFilters />
             </aside>
 
@@ -151,13 +85,17 @@ function SearchContent() {
                 <div className="mb-6 flex justify-between items-center">
                     <h1 className="text-2xl font-bold text-gray-900">Search Results</h1>
                     <span className="text-gray-500 text-sm">
-                        Showing {paginatedResults.length} of {filteredResults.length} profiles
+                        Showing {profiles.length} of {total} profiles
                     </span>
                 </div>
 
-                {paginatedResults.length > 0 ? (
+                {loading ? (
+                    <div className="flex justify-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                    </div>
+                ) : profiles.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {paginatedResults.map((profile) => (
+                        {profiles.map((profile) => (
                             <ProfileCard key={profile.id} profile={profile} />
                         ))}
                     </div>

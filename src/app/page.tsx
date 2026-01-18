@@ -4,16 +4,23 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Search, Heart, Shield, MessageCircle, Eye, Users, X } from 'lucide-react';
+import { Search, Heart, Shield, Eye, Users, X } from 'lucide-react';
 import ProfileCard from '@/components/ProfileCard';
+import AdPlacement from '@/components/AdPlacement';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Home() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [featuredProfiles, setFeaturedProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
   const [stats, setStats] = useState({ views: 0, matches: 0 });
+  const [siteSettings, setSiteSettings] = useState<any>({
+    site_name: 'DateSL',
+    hero_image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=1200'
+  });
 
   useEffect(() => {
     // Check login status
@@ -37,73 +44,48 @@ export default function Home() {
       localStorage.setItem('free_usage_count', newCount.toString());
 
       if (newCount > MAX_FREE_USAGE) {
-        const timer = setTimeout(() => setShowPaywall(true), 2000); // Delay slightly
-        return () => clearTimeout(timer);
+        // limit reached, redirect to register
+        router.push('/register?reason=limit');
       }
     }
 
-    const fetchProfiles = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch('/api/profiles?limit=4');
-        if (res.ok) {
-          const data = await res.json();
+        const [profilesRes, settingsRes] = await Promise.all([
+          fetch('/api/profiles?limit=4'),
+          fetch('/api/settings')
+        ]);
+
+        if (profilesRes.ok) {
+          const data = await profilesRes.json();
           setFeaturedProfiles(data.profiles || []);
         }
+
+        if (settingsRes.ok) {
+          const settings = await settingsRes.json();
+          if (Object.keys(settings).length > 0) {
+            setSiteSettings((prev: any) => ({ ...prev, ...settings }));
+          }
+        }
       } catch (error) {
-        console.error('Error fetching profiles:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProfiles();
+    fetchData();
   }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Paywall Modal */}
-      {showPaywall && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary to-primary-dark"></div>
-            <button
-              onClick={() => setShowPaywall(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="text-center mb-6">
-              <div className="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-8 h-8 text-primary" fill="currentColor" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">Join Sithumina Today!</h2>
-              <p className="text-gray-600 mt-2">You've enjoyed our free preview. Create an account to unlock full access and find your soulmate.</p>
-            </div>
-
-            <div className="space-y-4">
-              <Link
-                href="/register"
-                className="block w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-xl text-center transition-colors shadow-lg shadow-pink-200"
-              >
-                Create Free Profile
-              </Link>
-              <Link
-                href="/login"
-                className="block w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-semibold py-3 px-4 rounded-xl text-center transition-colors border border-gray-200"
-              >
-                Already have an account? Login
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Paywall Modal Removed - Redirects to Register instead */}
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary-dark to-primary py-20 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-20">
           <Image
-            src="https://placehold.co/1920x1080?text=Wedding+Background"
+            src={siteSettings.hero_image}
             alt="Background"
             fill
             className="object-cover mix-blend-overlay"
@@ -111,12 +93,11 @@ export default function Home() {
           />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-6 drop-shadow-md">
-            Find Your Life Partner <br className="hidden md:block" /> in Sri Lanka
+          <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-6 drop-shadow-md whitespace-pre-line">
+            {t('hero_title')} <span className="text-secondary-light">{t('hero_title_highlight')}</span>
           </h1>
           <p className="text-xl text-pink-50 max-w-2xl mx-auto mb-10 font-light">
-            Join thousands of Sri Lankans who have found their soulmate through Sithumina.
-            Safe, secure, and culturally connected.
+            {t('hero_subtitle')}
           </p>
 
           {/* Improved Search Box */}
@@ -176,6 +157,13 @@ export default function Home() {
               Search
             </button>
           </div>
+
+          {/* Top Ad Banner */}
+          {siteSettings.ad_header_script && (
+            <div className="mt-12 max-w-4xl mx-auto">
+              <AdPlacement scriptHtml={siteSettings.ad_header_script} />
+            </div>
+          )}
         </div>
       </section>
 
@@ -185,7 +173,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-8">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Welcome back!</h2>
+                <h2 className="text-2xl font-bold text-gray-900">{t('auth_welcome')}</h2>
                 <p className="text-gray-500">Here's what's happening with your profile.</p>
               </div>
               <div className="flex gap-4 w-full md:w-auto">
@@ -232,6 +220,13 @@ export default function Home() {
               ))
             )}
           </div>
+
+          {/* Inline Native Ad */}
+          {siteSettings.ad_native_inline && (
+            <div className="mt-12 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <AdPlacement scriptHtml={siteSettings.ad_native_inline} />
+            </div>
+          )}
 
           <div className="text-center mt-12">
             <Link
@@ -295,16 +290,30 @@ export default function Home() {
       <section className="bg-primary py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className="text-3xl font-bold text-white mb-6">Ready to find your soulmate?</h2>
+          <h2 className="text-3xl font-bold text-white mb-6">{t('hero_title')} {t('hero_title_highlight')}</h2>
           <p className="text-pink-100 mb-8 max-w-2xl mx-auto">
-            Create your profile today and start your journey towards a happy marriage. It's free to get started.
+            {t('hero_subtitle')}
           </p>
           <Link
             href="/register"
             className="inline-block bg-white text-primary font-bold px-10 py-4 rounded-full hover:bg-gray-100 transition-all shadow-xl transform hover:-translate-y-1"
           >
-            Create Free Profile
+            {t('hero_cta')}
           </Link>
+
+          {/* Bottom Banner slots */}
+          <div className="mt-12 flex flex-col items-center gap-6">
+            {siteSettings.ad_banner_468_60 && (
+              <div className="hidden md:block">
+                <AdPlacement scriptHtml={siteSettings.ad_banner_468_60} />
+              </div>
+            )}
+            {siteSettings.ad_banner_320_50 && (
+              <div className="md:hidden">
+                <AdPlacement scriptHtml={siteSettings.ad_banner_320_50} />
+              </div>
+            )}
+          </div>
         </div>
       </section>
     </div>

@@ -10,13 +10,15 @@ import { apiFetch } from '@/lib/api';
 export default function AdminDashboard() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState('users');
-    const [stats, setStats] = useState({ totalUsers: 0, activeMatches: 0, revenue: 0 });
+    const [stats, setStats] = useState({ totalUsers: 0, totalProfiles: 0, liveUsers: 0, activeMatches: 0, revenue: 0 });
     const [pendingUsers, setPendingUsers] = useState<any[]>([]);
     const [reports, setReports] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [chatLogs, setChatLogs] = useState<any[]>([]);
     const [registeredUsers, setRegisteredUsers] = useState<any[]>([]);
     const [adStats, setAdStats] = useState<any>({});
+    const [settings, setSettings] = useState<any>({});
+    const [savingSettings, setSavingSettings] = useState(false);
 
     const handleLogout = () => {
         document.cookie = "admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
@@ -26,13 +28,14 @@ export default function AdminDashboard() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [usersRes, reportsRes, statsRes, chatRes, guestsRes, adStatsRes] = await Promise.all([
+            const [usersRes, reportsRes, statsRes, chatRes, guestsRes, adStatsRes, settingsRes] = await Promise.all([
                 apiFetch('/api/admin/users?status=all'),
                 apiFetch('/api/admin/reports'),
                 apiFetch('/api/admin/stats'),
                 apiFetch('/api/admin/chat'),
                 apiFetch('/api/admin/guests'),
-                apiFetch('/api/admin/adsterra')
+                apiFetch('/api/admin/adsterra'),
+                apiFetch('/api/admin/settings')
             ]);
 
             if (usersRes.ok) setPendingUsers(await usersRes.json());
@@ -41,6 +44,7 @@ export default function AdminDashboard() {
             if (chatRes.ok) setChatLogs(await chatRes.json());
             if (guestsRes.ok) setRegisteredUsers(await guestsRes.json());
             if (adStatsRes.ok) setAdStats(await adStatsRes.json());
+            if (settingsRes.ok) setSettings(await settingsRes.json());
         } catch (error) {
             console.error('Error fetching admin data:', error);
         } finally {
@@ -318,6 +322,39 @@ export default function AdminDashboard() {
                             <div className="space-y-6">
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
+
+                                    {/* Stats Grid */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 mt-4">
+                                        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+                                            <div className="p-3 bg-blue-100 text-blue-600 rounded-lg">
+                                                <Users className="w-6 h-6" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-gray-500 font-medium">Real Users</p>
+                                                <p className="text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
+                                            </div>
+                                        </div>
+                                        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+                                            <div className="p-3 bg-purple-100 text-purple-600 rounded-lg">
+                                                <Users className="w-6 h-6" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-gray-500 font-medium">AI Profiles</p>
+                                                <p className="text-2xl font-bold text-gray-900">{stats.totalProfiles}</p>
+                                            </div>
+                                        </div>
+                                        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+                                            <div className="p-3 bg-green-100 text-green-600 rounded-lg relative">
+                                                <Users className="w-6 h-6" />
+                                                <span className="absolute top-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-gray-500 font-medium">Live Now</p>
+                                                <p className="text-2xl font-bold text-gray-900">{stats.liveUsers}</p>
+                                                <p className="text-xs text-green-600 font-medium">Active (5m)</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div className="flex gap-3">
                                         <button
                                             onClick={() => setShowCreateModal(true)}
@@ -343,6 +380,7 @@ export default function AdminDashboard() {
                                             <thead className="bg-gray-50 text-gray-500">
                                                 <tr>
                                                     <th className="px-6 py-3 font-medium">User</th>
+                                                    <th className="px-6 py-3 font-medium">Mobile</th>
                                                     <th className="px-6 py-3 font-medium">Status</th>
                                                     <th className="px-6 py-3 font-medium">Joined</th>
                                                     <th className="px-6 py-3 font-medium text-right">Actions</th>
@@ -357,6 +395,9 @@ export default function AdminDashboard() {
                                                                 <div className="font-medium">{user.name}</div>
                                                                 <div className="text-xs text-gray-500">{user.email || 'No Email'}</div>
                                                             </div>
+                                                        </td>
+                                                        <td className="px-6 py-4 text-gray-600 font-mono text-xs">
+                                                            {user.mobile_number || '-'}
                                                         </td>
                                                         <td className="px-6 py-4">
                                                             <div className="flex flex-col gap-2">
@@ -407,10 +448,103 @@ export default function AdminDashboard() {
                         )}
 
                         {activeTab === 'content' && (
-                            <div>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-6">Content Management</h2>
-                                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                                    <p className="text-gray-500">CMS features for editing banners and testimonials will go here.</p>
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <h2 className="text-2xl font-bold text-gray-900">Content & Settings CMS</h2>
+                                    <button
+                                        onClick={async () => {
+                                            setSavingSettings(true);
+                                            try {
+                                                const res = await apiFetch('/api/admin/settings', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify(settings)
+                                                });
+                                                if (res.ok) alert('Settings saved successfully!');
+                                            } catch (e) {
+                                                console.error(e);
+                                            } finally {
+                                                setSavingSettings(false);
+                                            }
+                                        }}
+                                        disabled={savingSettings}
+                                        className="bg-primary text-white px-6 py-2 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+                                    >
+                                        {savingSettings ? 'Saving...' : 'Save Site Settings'}
+                                    </button>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-4">
+                                        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                                            <FileText className="w-5 h-5 text-primary" />
+                                            General Information
+                                        </h3>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Site Name</label>
+                                            <input
+                                                type="text"
+                                                value={settings.site_name || ''}
+                                                onChange={e => setSettings({ ...settings, site_name: e.target.value })}
+                                                className="w-full p-2 border border-gray-300 rounded text-gray-900"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Welcome Title</label>
+                                            <input
+                                                type="text"
+                                                value={settings.welcome_title || ''}
+                                                onChange={e => setSettings({ ...settings, welcome_title: e.target.value })}
+                                                className="w-full p-2 border border-gray-300 rounded text-gray-900"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Welcome Subtitle</label>
+                                            <textarea
+                                                rows={3}
+                                                value={settings.welcome_subtitle || ''}
+                                                onChange={e => setSettings({ ...settings, welcome_subtitle: e.target.value })}
+                                                className="w-full p-2 border border-gray-300 rounded text-gray-900"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-4">
+                                        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                                            <BarChart className="w-5 h-5 text-primary" />
+                                            Visuals & Hero
+                                        </h3>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Hero Image URL</label>
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={settings.hero_image || ''}
+                                                    onChange={e => setSettings({ ...settings, hero_image: e.target.value })}
+                                                    className="flex-1 p-2 border border-gray-300 rounded text-gray-900"
+                                                />
+                                                <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded text-xs font-bold border border-gray-300 transition-colors">
+                                                    Upload
+                                                    <input type="file" className="hidden" accept="image/*" onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (!file) return;
+                                                        const formData = new FormData();
+                                                        formData.append('file', file);
+                                                        const res = await apiFetch('/api/upload', { method: 'POST', body: formData });
+                                                        if (res.ok) {
+                                                            const data = await res.json();
+                                                            setSettings({ ...settings, hero_image: data.url });
+                                                        }
+                                                    }} />
+                                                </label>
+                                            </div>
+                                            {settings.hero_image && (
+                                                <div className="mt-4 aspect-video rounded-lg overflow-hidden border border-gray-200">
+                                                    <img src={settings.hero_image} alt="Hero Preview" className="w-full h-full object-cover" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -524,12 +658,23 @@ export default function AdminDashboard() {
                             <div>
                                 <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                                     Adsterra Monetization
-                                    {/* @ts-ignore */}
-                                    {adStats._is_mock && (
-                                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-normal border border-yellow-200">
-                                            Mock Data (API Connecting...)
-                                        </span>
-                                    )}
+                                    <div className="flex items-center gap-4 ml-auto">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm text-gray-500">Enable All Ads:</span>
+                                            <button
+                                                onClick={() => setSettings({ ...settings, enable_ads: settings.enable_ads === '1' ? '0' : '1' })}
+                                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${settings.enable_ads === '1' ? 'bg-primary' : 'bg-gray-200'}`}
+                                            >
+                                                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.enable_ads === '1' ? 'translate-x-6' : 'translate-x-1'}`} />
+                                            </button>
+                                        </div>
+                                        {/* @ts-ignore */}
+                                        {adStats._is_mock && (
+                                            <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-normal border border-yellow-200">
+                                                Mock Data (API Connecting...)
+                                            </span>
+                                        )}
+                                    </div>
                                 </h2>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -587,20 +732,144 @@ export default function AdminDashboard() {
                                     </div>
                                 </div>
 
+                                {/* Daily Revenue Breakdown */}
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8 overflow-hidden">
+                                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                                        <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                                            <TrendingUp className="w-5 h-5 text-primary" />
+                                            Daily Revenue Breakdown (Last 30 Days)
+                                        </h3>
+                                    </div>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left text-sm">
+                                            <thead className="bg-gray-50 text-gray-500 uppercase text-[10px] font-bold">
+                                                <tr>
+                                                    <th className="px-6 py-3">Date</th>
+                                                    <th className="px-6 py-3">Impressions</th>
+                                                    <th className="px-6 py-3">Clicks</th>
+                                                    <th className="px-6 py-3">Revenue</th>
+                                                    <th className="px-6 py-3">CPM</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-200">
+                                                {/* @ts-ignore */}
+                                                {!adStats.items || adStats.items.length === 0 ? (
+                                                    <tr>
+                                                        <td colSpan={5} className="px-6 py-8 text-center text-gray-400 italic">No data available for this period.</td>
+                                                    </tr>
+                                                ) : (
+                                                    /* @ts-ignore */
+                                                    adStats.items.map((item: any, idx: number) => (
+                                                        <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                                                            <td className="px-6 py-4 font-medium text-gray-900">{item.date}</td>
+                                                            <td className="px-6 py-4 text-gray-600">{Number(item.impressions).toLocaleString()}</td>
+                                                            <td className="px-6 py-4 text-gray-600">{Number(item.clicks).toLocaleString()}</td>
+                                                            <td className="px-6 py-4 font-bold text-green-600">${Number(item.revenue).toFixed(2)}</td>
+                                                            <td className="px-6 py-4 text-gray-500">
+                                                                ${item.impressions > 0 ? ((item.revenue / item.impressions) * 1000).toFixed(2) : '0.00'}
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-4">Ad Placement Codes</h3>
-                                    <div className="space-y-4">
-                                        <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <span className="font-semibold text-gray-700">Native Banner (Recommended)</span>
-                                                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Active</span>
-                                            </div>
-                                            <code className="block text-xs text-gray-600 font-mono break-all">
-                                                &lt;script async="async" data-cfasync="false" src="//pl12345678.highcpmgate.com/..."&gt;&lt;/script&gt;
-                                            </code>
-                                            <p className="text-xs text-gray-500 mt-2">Place this code in your site using the "Ads" component (coming soon).</p>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                        <TrendingUp className="w-5 h-5 text-primary" />
+                                        Active Ad Placements
+                                    </h3>
+                                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-bold text-gray-700">Popunder Script (Global)</span>
+                                            <span className={`text-xs px-2 py-1 rounded-full ${settings.ad_popunder_script ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
+                                                {settings.ad_popunder_script ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </div>
+                                        <textarea
+                                            rows={3}
+                                            placeholder="Paste Popunder Script here..."
+                                            value={settings.ad_popunder_script || ''}
+                                            onChange={e => setSettings({ ...settings, ad_popunder_script: e.target.value })}
+                                            className="w-full p-2 font-mono text-xs bg-white border border-gray-300 rounded-lg"
+                                        />
+                                    </div>
+
+                                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-bold text-gray-700">Social Bar Script (Global)</span>
+                                            <span className={`text-xs px-2 py-1 rounded-full ${settings.ad_social_bar_script ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
+                                                {settings.ad_social_bar_script ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </div>
+                                        <textarea
+                                            rows={3}
+                                            placeholder="Paste Social Bar Script here..."
+                                            value={settings.ad_social_bar_script || ''}
+                                            onChange={e => setSettings({ ...settings, ad_social_bar_script: e.target.value })}
+                                            className="w-full p-2 font-mono text-xs bg-white border border-gray-300 rounded-lg"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                            <span className="block font-bold text-gray-700 mb-2">Banner 320x50</span>
+                                            <textarea
+                                                rows={3}
+                                                placeholder="320x50 Banner Code..."
+                                                value={settings.ad_banner_320_50 || ''}
+                                                onChange={e => setSettings({ ...settings, ad_banner_320_50: e.target.value })}
+                                                className="w-full p-2 font-mono text-xs bg-white border border-gray-300 rounded-lg"
+                                            />
+                                        </div>
+                                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                            <span className="block font-bold text-gray-700 mb-2">Banner 468x60</span>
+                                            <textarea
+                                                rows={3}
+                                                placeholder="468x60 Banner Code..."
+                                                value={settings.ad_banner_468_60 || ''}
+                                                onChange={e => setSettings({ ...settings, ad_banner_468_60: e.target.value })}
+                                                className="w-full p-2 font-mono text-xs bg-white border border-gray-300 rounded-lg"
+                                            />
                                         </div>
                                     </div>
+
+                                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-bold text-gray-700">Legacy Native In-Feed Ad</span>
+                                            <span className={`text-xs px-2 py-1 rounded-full ${settings.ad_native_inline ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
+                                                {settings.ad_native_inline ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </div>
+                                        <textarea
+                                            rows={3}
+                                            placeholder="Paste Native Script..."
+                                            value={settings.ad_native_inline || ''}
+                                            onChange={e => setSettings({ ...settings, ad_native_inline: e.target.value })}
+                                            className="w-full p-2 font-mono text-xs bg-white border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary/20"
+                                        />
+                                    </div>
+
+                                    <button
+                                        onClick={async () => {
+                                            setSavingSettings(true);
+                                            try {
+                                                const res = await apiFetch('/api/admin/settings', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify(settings)
+                                                });
+                                                if (res.ok) alert('All ad placements updated!');
+                                            } catch (e) { console.error(e); }
+                                            finally { setSavingSettings(false); }
+                                        }}
+                                        disabled={savingSettings}
+                                        className="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg hover:bg-primary-dark transition-all"
+                                    >
+                                        {savingSettings ? 'Saving...' : 'Save All Ad Configurations'}
+                                    </button>
                                 </div>
                             </div>
                         )}

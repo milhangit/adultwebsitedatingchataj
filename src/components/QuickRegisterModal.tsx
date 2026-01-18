@@ -14,7 +14,8 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
     const [phone, setPhone] = useState('');
     const [otp, setOtp] = useState('');
     const [name, setName] = useState('');
-    const [image, setImage] = useState<string | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null); // Renamed from 'image'
+    const [imageFile, setImageFile] = useState<File | null>(null); // New state for the actual file
     const [loading, setLoading] = useState(false);
 
     const handleSendOtp = () => {
@@ -36,12 +37,35 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
     };
 
     const handleComplete = async () => {
+        if (!name || (!imagePreview && !imageFile)) {
+            alert('Please provide your name and an image.');
+            return;
+        }
         setLoading(true);
         try {
+            let finalImageUrl = imagePreview; // Use imagePreview as initial value
+
+            // Upload image if we have a file
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append('file', imageFile);
+                const uploadRes = await apiFetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (uploadRes.ok) {
+                    const uploadData = await uploadRes.json();
+                    finalImageUrl = uploadData.url;
+                } else {
+                    const errorData = await uploadRes.json();
+                    throw new Error('Image upload failed: ' + (errorData.error || 'Unknown error'));
+                }
+            }
+
             const res = await apiFetch('/api/auth/register-guest', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, name, image })
+                body: JSON.stringify({ phone, name, image: finalImageUrl })
             });
 
             if (res.ok) {
@@ -50,11 +74,13 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
                 localStorage.setItem('user_name', data.name);
                 onSuccess(data.userId);
             } else {
-                console.error('Registration failed');
-                // Handle error (e.g. show toast)
+                const errorData = await res.json();
+                console.error('Registration failed:', errorData.error);
+                alert('Registration failed: ' + (errorData.error || 'Unknown error'));
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error registering:', error);
+            alert('Error: ' + error.message);
         } finally {
             setLoading(false);
         }
@@ -63,9 +89,10 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            setImageFile(file); // Store the file object
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImage(reader.result as string);
+                setImagePreview(reader.result as string); // Set the preview image
             };
             reader.readAsDataURL(file);
         }
@@ -142,15 +169,15 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
 
                             <div className="mb-6 flex justify-center">
                                 <label className="relative cursor-pointer group">
-                                    <div className={`w-24 h-24 rounded-full flex items-center justify-center border-2 border-dashed border-gray-300 overflow-hidden ${!image && 'bg-gray-50'}`}>
-                                        {image ? (
-                                            <img src={image} alt="Profile" className="w-full h-full object-cover" />
+                                    <div className={`w-24 h-24 rounded-full flex items-center justify-center border-2 border-dashed border-gray-300 overflow-hidden ${!imagePreview && 'bg-gray-50'}`}>
+                                        {imagePreview ? (
+                                            <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
                                         ) : (
                                             <Camera className="w-8 h-8 text-gray-400 group-hover:text-primary transition-colors" />
                                         )}
                                     </div>
                                     <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
-                                    {image && (
+                                    {imagePreview && (
                                         <div className="absolute bottom-0 right-0 bg-primary text-white p-1 rounded-full border-2 border-white">
                                             <Check className="w-3 h-3" />
                                         </div>
@@ -171,10 +198,10 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
 
                             <button
                                 onClick={handleComplete}
-                                disabled={!name || !image || loading}
+                                disabled={!name || (!imagePreview && !imageFile) || loading}
                                 className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {loading ? 'Creating Profile...' : 'Start Chatting'}
+                                {loading ? 'Processing...' : 'Start Chatting'}
                             </button>
                         </div>
                     )}

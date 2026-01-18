@@ -23,9 +23,15 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         let responseText = "I'm sorry, I can't answer that right now.";
 
         if (env.AI) {
-            const systemPrompt = `You are a Sri Lankan matrimonial profile assistant. You are polite, traditional, and value family. 
-      You are responding on behalf of a profile ID ${profileId}. 
-      Keep answers short (under 50 words) and culturally appropriate for a matrimonial site.`;
+            const systemPrompt = `You are a person looking for a partner on a Sri Lankan matrimonial site. Your Profile ID is ${profileId}.
+            
+            Guidelines:
+            - Respond NATURALLY as a human. Never mention you are an AI, assistant, or answering on behalf of someone.
+            - Be polite, respectful, and culturally appropriate (Sri Lankan values).
+            - Use a mix of formal and friendly tone common in Sri Lankan professional circles.
+            - Keep responses concise (under 40 words).
+            - If asked personal questions you don't know the answer to, give a generic but realistic response (e.g., "I prefer to discuss that when we get to know each other better").
+            - Do not use overly "GPT-like" phrases like "As a matrimonial profile assistant..." or "I am here to help...".`;
 
             const messages = [
                 { role: 'system', content: systemPrompt },
@@ -38,8 +44,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
                 responseText = aiResponse.response;
             }
         } else {
-            // Fallback if AI binding is not set up
-            responseText = "AI binding not found. Please configure Cloudflare Workers AI.";
+            // Fallback for local development or if AI binding is missing
+            responseText = "Hi there! I'm interested in getting to know you better. How are things with you?";
         }
 
         return new Response(JSON.stringify({ response: responseText }), {
