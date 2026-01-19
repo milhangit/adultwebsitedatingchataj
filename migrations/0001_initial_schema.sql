@@ -97,8 +97,8 @@ CREATE TABLE IF NOT EXISTS reports (
 
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-CREATE INDEX IF NOT EXISTS idx_users_location ON users(location);
-CREATE INDEX IF NOT EXISTS idx_users_religion ON users(religion);
-CREATE INDEX IF NOT EXISTS idx_users_caste ON users(caste);
-CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles(user_id);
-CREATE INDEX IF NOT EXISTS idx_messages_sender_receiver ON messages(sender_id, receiver_id);
+-- CREATE INDEX IF NOT EXISTS idx_users_location ON users(location);
+-- CREATE INDEX IF NOT EXISTS idx_users_religion ON users(religion);
+-- CREATE INDEX IF NOT EXISTS idx_users_caste ON users(caste);
+-- CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles(user_id);
+-- CREATE INDEX IF NOT EXISTS idx_messages_sender_receiver ON messages(sender_id, receiver_id);

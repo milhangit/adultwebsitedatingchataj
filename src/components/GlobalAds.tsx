@@ -1,11 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function GlobalAds() {
     const [ads, setAds] = useState<any>(null);
+    const pathname = usePathname();
 
     useEffect(() => {
+        // Don't show ads on register page or admin panel
+        if (pathname === '/register' || pathname?.startsWith('/admin')) {
+            return;
+        }
+
         fetch('/api/settings')
             .then(res => res.json())
             .then(data => {
@@ -15,7 +22,7 @@ export default function GlobalAds() {
                 }
             })
             .catch(console.error);
-    }, []);
+    }, [pathname]);
 
     useEffect(() => {
         if (!ads) return;

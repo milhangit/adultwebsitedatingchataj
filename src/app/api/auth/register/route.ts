@@ -81,9 +81,9 @@ export async function POST(req: NextRequest) {
 
         // Create User Record
         const insertUser = db.prepare(`
-            INSERT INTO users (user_id, name, email, password_hash, gender, role, ip_address, user_agent, country, city, device_type, mobile_number, last_seen)
+            INSERT INTO users (user_id, name, email, password_hash, gender, role, ip_address, user_agent, country, city, device_type, phone, last_active)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).bind(userId, fullName, email, passwordHash, gender, 'user', ip, userAgent, country, city, deviceType, formattedMobile, lastSeen);
+        `).bind(userId, fullName, email, passwordHash, gender, 'user', ip, userAgent, country, city, deviceType, formattedMobile, new Date().toISOString());
 
         // Create Profile Record
         const defaultAge = 25;
