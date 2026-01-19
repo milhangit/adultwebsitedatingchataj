@@ -64,9 +64,15 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
                 }
                 onSuccess(data.userId);
             } else {
-                const errorData = await res.json() as any;
-                console.error('Registration failed:', errorData.error);
-                alert('Registration failed: ' + (errorData.error || 'Unknown error'));
+                const text = await res.text();
+                try {
+                    const errorData = JSON.parse(text);
+                    console.error('Registration failed:', errorData.error);
+                    alert('Registration failed: ' + (errorData.error || 'Unknown error'));
+                } catch (e) {
+                    console.error('Registration failed non-JSON:', text);
+                    alert('Registration failed. Please try again.');
+                }
             }
         } catch (error: any) {
             console.error('Error registering:', error);

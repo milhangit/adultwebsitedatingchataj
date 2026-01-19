@@ -22,22 +22,40 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
         const dummyEmail = `${userId}@guest.matchlk.com`;
 
-        // Try to insert into users table using a query that covers likely schema variations
-        // We assume 0011_add_tracking_columns.sql has been run to add missing columns if needed.
-        // If not, this might fail on missing columns, but we must try to capture the data.
+        // 1. Insert into USERS table
+        try {
+            // Attempt 1: Full Schema (with email, role - assuming 0001+0007 hybrid)
+            await db.prepare(`
+                INSERT INTO users (user_id, phone, name, email, role, image_url, ip_address, user_agent, country, city, device_type)
+                VALUES (?, ?, ?, ?, 'guest', ?, ?, ?, ?, ?, ?)
+            `).bind(userId, phone, name, dummyEmail, image, ip, userAgent, country, city, deviceType).run();
+        } catch (err: any) {
+            console.error('Full schema insert failed, trying minimal:', err.message);
+            // Attempt 2: Minimal/Tracking Schema (0007 only - no email/role)
+            await db.prepare(`
+                INSERT INTO users (user_id, phone, name, image_url, ip_address, user_agent, country, city, device_type)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `).bind(userId, phone, name, image, ip, userAgent, country, city, deviceType).run();
+        }
 
-        // Note: migrating schemas is tricky without direct DB access. 
-        // We included 'email' to satisfy 0001, and 'ip_address' etc for 0007/0011.
+        // 2. Insert into PROFILES table (Critical for CMS visibility)
+        try {
+            // We need the INTEGER id of the user we just inserted to link correctly.
+            const userRow = await db.prepare('SELECT id FROM users WHERE user_id = ?').bind(userId).first();
 
-        const stmt = db.prepare(`
-            INSERT INTO users (user_id, phone, name, email, role, image_url, ip_address, user_agent, country, city, device_type)
-            VALUES (?, ?, ?, ?, 'guest', ?, ?, ?, ?, ?, ?)
-        `).bind(userId, phone, name, dummyEmail, image, ip, userAgent, country, city, deviceType);
-
-        await stmt.run();
-
-
-        await stmt.run();
+            if (userRow && userRow.id) {
+                // Insert default profile data
+                await db.prepare(`
+                    INSERT INTO profiles (user_id, name, age, gender, location, occupation, imageUrl, isVerified)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                 `).bind(userRow.id, name, 25, 'Unknown', city || 'Sri Lanka', 'Guest', image, false).run();
+            } else {
+                console.error('Could not find user row ID for profile creation');
+            }
+        } catch (err: any) {
+            console.error('Failed to create profile:', err.message);
+            // We continue, as user registration is technically successful
+        }
 
         // Generate simple session token (Base64 of userId for this MVP)
         const sessionToken = btoa(userId);
