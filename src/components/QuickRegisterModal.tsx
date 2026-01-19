@@ -71,7 +71,8 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
                     alert('Registration failed: ' + (errorData.error || 'Unknown error'));
                 } catch (e) {
                     console.error('Registration failed non-JSON:', text);
-                    alert('Registration failed. Please try again.');
+                    // Show first 100 chars of text to help debug
+                    alert('Registration Error (Server): ' + text.substring(0, 150));
                 }
             }
         } catch (error: any) {
