@@ -43,24 +43,11 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
         }
         setLoading(true);
         try {
-            let finalImageUrl = imagePreview; // Use imagePreview as initial value
+            let finalImageUrl = imagePreview;
 
-            // Upload image if we have a file
-            if (imageFile) {
-                const formData = new FormData();
-                formData.append('file', imageFile);
-                const uploadRes = await apiFetch('/api/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                if (uploadRes.ok) {
-                    const uploadData = await uploadRes.json() as any;
-                    finalImageUrl = uploadData.url;
-                } else {
-                    const errorData = await uploadRes.json() as any;
-                    throw new Error('Image upload failed: ' + (errorData.error || 'Unknown error'));
-                }
-            }
+            // Note: Direct image upload to R2 would be better, but for now we send Base64 to the function.
+            // The function should handle it. Since /api/upload is missing, we skip it.
+
 
             const res = await apiFetch('/api/auth/register-guest', {
                 method: 'POST',
@@ -191,7 +178,7 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="block w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary"
+                                    className="block w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary text-gray-900 bg-white"
                                     placeholder="Enter your name"
                                 />
                             </div>

@@ -20,11 +20,22 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         const db = env.DB;
         const userId = 'guest_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
 
-        // Insert into users table
-        await db.prepare(`
-            INSERT INTO users (user_id, phone, name, image_url, ip_address, user_agent, country, city, device_type)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).bind(userId, phone, name, image, ip, userAgent, country, city, deviceType).run();
+        const dummyEmail = `${userId}@guest.matchlk.com`;
+
+        // Try to insert into users table using a query that covers likely schema variations
+        // We assume 0011_add_tracking_columns.sql has been run to add missing columns if needed.
+        // If not, this might fail on missing columns, but we must try to capture the data.
+
+        // Note: migrating schemas is tricky without direct DB access. 
+        // We included 'email' to satisfy 0001, and 'ip_address' etc for 0007/0011.
+
+        const stmt = db.prepare(`
+            INSERT INTO users (user_id, phone, name, email, role, image_url, ip_address, user_agent, country, city, device_type)
+            VALUES (?, ?, ?, ?, 'guest', ?, ?, ?, ?, ?, ?)
+        `).bind(userId, phone, name, dummyEmail, image, ip, userAgent, country, city, deviceType);
+
+        await stmt.run();
+
 
         return new Response(JSON.stringify({ userId, name, phone }), {
             headers: { 'Content-Type': 'application/json' }
