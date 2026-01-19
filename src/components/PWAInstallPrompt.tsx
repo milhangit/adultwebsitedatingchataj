@@ -88,11 +88,11 @@ export default function PWAInstallPrompt() {
                         <Download className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h4 className="font-bold text-gray-900 dark:text-white leading-tight">Install DateSL App</h4>
+                        <h4 className="font-bold text-gray-900 dark:text-white leading-tight">Install MatchLK App</h4>
                         <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 leading-relaxed">
                             {platform === 'ios'
                                 ? 'Tap the share icon and select "Add to Home Screen" for a premium mobile experience.'
-                                : 'Add DateSL to your home screen for faster access and offline chat.'}
+                                : 'Add MatchLK to your home screen for faster access and offline chat.'}
                         </p>
 
                         {platform === 'ios' && (

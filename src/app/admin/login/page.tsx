@@ -29,7 +29,7 @@ export default function AdminLogin() {
                         <Lock className="w-8 h-8 text-white" />
                     </div>
                     <h2 className="text-2xl font-bold text-white">Super Admin</h2>
-                    <p className="text-teal-100 mt-1">Sign in to manage DateSL</p>
+                    <p className="text-teal-100 mt-1">Sign in to manage MatchLK</p>
                 </div>
 
                 <form onSubmit={handleLogin} className="p-8 space-y-6">

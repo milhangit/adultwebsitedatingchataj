@@ -1,4 +1,4 @@
-# DateSL - Sri Lankan Matrimonial PWA
+# MatchLK - Sri Lankan Matrimonial PWA
 
 A premium, mobile-first matrimonial platform built for the Sri Lankan market. This application uses Next.js (App Router) on Cloudflare Pages with a D1 Database.
 
@@ -83,4 +83,4 @@ This error occurs if the API crashes. We have implemented a safe-wrapper in `src
 We use Base64 SVGs for carrier logos to prevent external blocking. User profile images use `ui-avatars.com` or `unsplash.com`.
 
 ## 📄 License
-Private Property of DateSL.
+Private Property of MatchLK.

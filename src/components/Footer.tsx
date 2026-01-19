@@ -21,7 +21,7 @@ export default function Footer() {
                     <div className="col-span-1 md:col-span-1">
                         <Link href="/" className="text-2xl font-bold text-primary tracking-tighter flex items-center">
                             <Heart className="h-6 w-6 mr-1 fill-primary" />
-                            <span>DateSL</span>
+                            <span>MatchLK</span>
                         </Link>
                         <p className="mt-4 text-gray-500 text-sm leading-relaxed">
                             {t('footer_about')}
@@ -38,8 +38,8 @@ export default function Footer() {
                                         key={lang.code}
                                         onClick={() => setLanguage(lang.code as Language)}
                                         className={`px-3 py-1 text-xs rounded-full border transition-colors ${language === lang.code
-                                                ? 'bg-primary text-white border-primary'
-                                                : 'text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
+                                            ? 'bg-primary text-white border-primary'
+                                            : 'text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
                                             }`}
                                     >
                                         {lang.label}
@@ -92,7 +92,7 @@ export default function Footer() {
                 </div>
                 <div className="mt-12 border-t border-gray-200 pt-8">
                     <p className="text-base text-gray-400 text-center">
-                        &copy; {new Date().getFullYear()} DateSL. {t('footer_copyright')}
+                        &copy; {new Date().getFullYear()} MatchLK. {t('footer_copyright')}
                     </p>
                 </div>
             </div>

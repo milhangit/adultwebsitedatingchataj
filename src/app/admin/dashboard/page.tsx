@@ -246,7 +246,7 @@ export default function AdminDashboard() {
             {/* Sidebar */}
             <aside className="bg-white w-full md:w-64 border-r border-gray-200 flex-shrink-0">
                 <div className="p-6 border-b border-gray-200">
-                    <h1 className="text-xl font-bold text-primary">DateSL Admin</h1>
+                    <h1 className="text-xl font-bold text-primary">MatchLK Admin</h1>
                 </div>
                 <nav className="p-4 space-y-2">
                     <button

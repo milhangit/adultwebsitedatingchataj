@@ -28,7 +28,7 @@ export default function Header() {
                         <Heart className="w-5 h-5 text-white fill-current" />
                     </div>
                     <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light hidden md:block" style={{ fontFamily: 'var(--font-outfit)' }}>
-                        DateSL
+                        MatchLK
                     </span>
                 </Link>
 

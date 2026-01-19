@@ -33,13 +33,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "DateSL - Sri Lankan Matrimonial",
+  title: "MatchLK - Sri Lankan Matrimonial",
   description: "Sri Lanka's most trusted matrimonial service. Connect with genuine profiles and find your soulmate today.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "DateSL",
+    title: "MatchLK",
   },
 };
 

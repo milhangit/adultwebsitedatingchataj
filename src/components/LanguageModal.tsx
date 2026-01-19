@@ -46,7 +46,7 @@ export default function LanguageModal() {
                         <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-white/10 shadow-inner">
                             <Globe className="w-8 h-8 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white mb-2">Welcome to DateSL</h2>
+                        <h2 className="text-2xl font-bold text-white mb-2">Welcome to MatchLK</h2>
                         <p className="text-white/80 text-sm">Please select your preferred language</p>
                     </div>
                 </div>
@@ -62,8 +62,8 @@ export default function LanguageModal() {
                             key={lang.code}
                             onClick={() => handleSelect(lang.code as Language)}
                             className={`w-full group relative flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-300 ${language === lang.code
-                                    ? 'border-primary bg-primary/5 shadow-lg scale-[1.02]'
-                                    : 'border-gray-100 hover:border-primary/30 hover:bg-gray-50'
+                                ? 'border-primary bg-primary/5 shadow-lg scale-[1.02]'
+                                : 'border-gray-100 hover:border-primary/30 hover:bg-gray-50'
                                 }`}
                         >
                             <div className="flex flex-col items-start">
@@ -74,8 +74,8 @@ export default function LanguageModal() {
                             </div>
 
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${language === lang.code
-                                    ? 'bg-primary text-white shadow-md scale-100'
-                                    : 'bg-gray-100 text-gray-300 scale-90 group-hover:scale-95'
+                                ? 'bg-primary text-white shadow-md scale-100'
+                                : 'bg-gray-100 text-gray-300 scale-90 group-hover:scale-95'
                                 }`}>
                                 {language === lang.code && <Check className="w-5 h-5" />}
                             </div>

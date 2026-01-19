@@ -18,7 +18,7 @@ export default function Home() {
   const [showPaywall, setShowPaywall] = useState(false);
   const [stats, setStats] = useState({ views: 0, matches: 0 });
   const [siteSettings, setSiteSettings] = useState<any>({
-    site_name: 'DateSL',
+    site_name: 'MatchLK',
     hero_image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=1200'
   });
 

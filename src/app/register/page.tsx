@@ -109,7 +109,7 @@ export default function RegisterPage() {
                             <Heart className="w-6 h-6 text-white fill-current" />
                         </div>
                         <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light" style={{ fontFamily: 'var(--font-outfit)' }}>
-                            DateSL
+                            MatchLK
                         </span>
                     </Link>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('auth_register_title')}</h2>
