@@ -37,7 +37,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         await stmt.run();
 
 
-        return new Response(JSON.stringify({ userId, name, phone }), {
+        await stmt.run();
+
+        // Generate simple session token (Base64 of userId for this MVP)
+        const sessionToken = btoa(userId);
+
+        return new Response(JSON.stringify({ userId, name, phone, sessionToken }), {
             headers: { 'Content-Type': 'application/json' }
         });
     } catch (error: any) {

@@ -33,6 +33,13 @@ function LoginContent() {
             }
 
             // Success
+            if (data.sessionToken) {
+                localStorage.setItem('d1_session_token', data.sessionToken);
+            }
+            if (data.user?.user_id) {
+                localStorage.setItem('user_id', data.user.user_id);
+            }
+
             // Force a hard navigation or router push to refresh state
             window.location.href = '/profile';
         } catch (err: any) {

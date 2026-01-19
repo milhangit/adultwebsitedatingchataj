@@ -59,6 +59,9 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
                 const data = await res.json() as any;
                 localStorage.setItem('user_id', data.userId);
                 localStorage.setItem('user_name', data.name);
+                if (data.sessionToken) {
+                    localStorage.setItem('d1_session_token', data.sessionToken);
+                }
                 onSuccess(data.userId);
             } else {
                 const errorData = await res.json() as any;

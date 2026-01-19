@@ -41,8 +41,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         // For this "demo" / "MVP", we can set a cookie `user_session` = `user_id`.
 
         const sessionValue = user.user_id; // Simple session for now.
+        const sessionToken = btoa(user.user_id as string); // Token for client-side storage
 
-        return new Response(JSON.stringify({ success: true, user }), {
+        return new Response(JSON.stringify({ success: true, user, sessionToken }), {
             headers: {
                 'Content-Type': 'application/json',
                 'Set-Cookie': `user_session=${sessionValue}; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400`
