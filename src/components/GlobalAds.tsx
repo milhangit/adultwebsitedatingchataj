@@ -9,8 +9,9 @@ export default function GlobalAds() {
         fetch('/api/settings')
             .then(res => res.json())
             .then(data => {
-                if (data.enable_ads === '1') {
-                    setAds(data);
+                const config = data as any;
+                if (config.enable_ads === '1') {
+                    setAds(config);
                 }
             })
             .catch(console.error);

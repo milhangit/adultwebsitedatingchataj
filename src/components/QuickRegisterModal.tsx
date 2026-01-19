@@ -54,10 +54,10 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
                     body: formData
                 });
                 if (uploadRes.ok) {
-                    const uploadData = await uploadRes.json();
+                    const uploadData = await uploadRes.json() as any;
                     finalImageUrl = uploadData.url;
                 } else {
-                    const errorData = await uploadRes.json();
+                    const errorData = await uploadRes.json() as any;
                     throw new Error('Image upload failed: ' + (errorData.error || 'Unknown error'));
                 }
             }
@@ -69,12 +69,12 @@ export default function QuickRegisterModal({ onClose, onSuccess }: QuickRegister
             });
 
             if (res.ok) {
-                const data = await res.json();
+                const data = await res.json() as any;
                 localStorage.setItem('user_id', data.userId);
                 localStorage.setItem('user_name', data.name);
                 onSuccess(data.userId);
             } else {
-                const errorData = await res.json();
+                const errorData = await res.json() as any;
                 console.error('Registration failed:', errorData.error);
                 alert('Registration failed: ' + (errorData.error || 'Unknown error'));
             }

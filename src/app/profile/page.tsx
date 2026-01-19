@@ -40,7 +40,7 @@ function ProfileContent() {
                     throw new Error('Failed to fetch profile');
                 }
 
-                const data = await res.json();
+                const data = await res.json() as any;
 
                 // Handle both public profile format and internal user format
                 // The /api/user/me might return slightly different fields (e.g. image_url vs imageUrl)

@@ -70,7 +70,7 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
             try {
                 const res = await apiFetch(`/api/messages?profileId=${profile.id}&userId=${userId}`);
                 if (res.ok) {
-                    const data = await res.json();
+                    const data = await res.json() as any[];
                     if (data.length > 0) {
                         setMessages(data.map((m: any) => ({
                             id: m.id,
@@ -134,7 +134,7 @@ export default function ChatWindow({ profile, onClose }: ChatWindowProps) {
             });
 
             if (res.ok) {
-                const data = await res.json();
+                const data = await res.json() as any;
 
                 // Random delay for response realism (2-4 seconds)
                 const delay = Math.floor(Math.random() * 2000) + 2000;

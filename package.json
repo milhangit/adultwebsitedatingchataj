@@ -9,7 +9,9 @@
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static"
   },
   "dependencies": {
     "clsx": "^2.1.1",

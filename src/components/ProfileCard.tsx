@@ -20,9 +20,10 @@ export default function ProfileCard({ profile }: { profile: ProfileProps }) {
         <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 group">
             <div className="relative h-64 w-full overflow-hidden">
                 <Image
-                    src={profile.imageUrl}
+                    src={profile.imageUrl || 'https://placehold.co/400x600?text=No+Image'}
                     alt={profile.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-3 right-3 z-10">

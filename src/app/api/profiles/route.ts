@@ -1,19 +1,29 @@
-interface Env {
-    DB: D1Database;
-}
+import { NextRequest, NextResponse } from 'next/server';
+import { getRequestContext } from '@cloudflare/next-on-pages';
 
-export const onRequestGet: PagesFunction<Env> = async (context) => {
-    const { request, env } = context;
-    const url = new URL(request.url);
-    const params = url.searchParams;
+export const runtime = 'edge';
 
-    const gender = params.get('gender');
-    const minAge = parseInt(params.get('minAge') || '18');
-    const maxAge = parseInt(params.get('maxAge') || '100');
-    const location = params.get('location');
-    const caste = params.get('caste');
-    const religion = params.get('religion');
-    const page = parseInt(params.get('page') || '1');
+export async function GET(request: NextRequest) {
+    let env: any;
+    try {
+        const ctx = getRequestContext();
+        if (!ctx) throw new Error("No context returned from getRequestContext");
+        env = ctx.env;
+        if (!env) throw new Error("No env found in context");
+        if (!env.DB) throw new Error("DB binding missing in env. Available keys: " + Object.keys(env).join(", "));
+    } catch (e: any) {
+        return NextResponse.json({ error: "Environment Error: " + e.message }, { status: 500 });
+    }
+
+    const searchParams = request.nextUrl.searchParams;
+
+    const gender = searchParams.get('gender');
+    const minAge = parseInt(searchParams.get('minAge') || '18');
+    const maxAge = parseInt(searchParams.get('maxAge') || '100');
+    const location = searchParams.get('location');
+    const caste = searchParams.get('caste');
+    const religion = searchParams.get('religion');
+    const page = parseInt(searchParams.get('page') || '1');
     const limit = 6;
     const offset = (page - 1) * limit;
 
@@ -52,10 +62,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         const { results } = await env.DB.prepare(query).bind(...queryParams).all();
 
         // Get total count for pagination metadata
-        // Note: This is a simplified count query, ideally should match filters
-        // For efficiency in this demo, we might skip complex count or do a separate query
-        // Let's do a separate count query with same filters (minus limit/offset)
-
         let countQuery = 'SELECT COUNT(*) as total FROM profiles WHERE age >= ? AND age <= ?';
         const countParams: any[] = [minAge, maxAge];
 
@@ -86,19 +92,29 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         const countResult = await env.DB.prepare(countQuery).bind(...countParams).first();
         const total = countResult?.total || 0;
 
-        return new Response(JSON.stringify({
-            profiles: results,
+        const processedResults = results.map((profile: any) => {
+            let images = [];
+            try {
+                if (profile.images) {
+                    images = JSON.parse(profile.images);
+                }
+            } catch (e) {
+                // strict silencing of json parse errors
+            }
+            return { ...profile, images };
+        });
+
+        return NextResponse.json({
+            profiles: processedResults,
             pagination: {
                 page,
                 limit,
                 total,
                 totalPages: Math.ceil(Number(total) / limit)
             }
-        }), {
-            headers: { 'Content-Type': 'application/json' }
         });
 
     } catch (error: any) {
-        return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
-};
+}

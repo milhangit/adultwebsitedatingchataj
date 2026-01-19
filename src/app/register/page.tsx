@@ -100,6 +100,9 @@ export default function RegisterPage() {
             </div>
 
             <div className="w-full max-w-lg bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 sm:p-10 relative z-10 animate-in fade-in zoom-in duration-300">
+                {/* Version Indicator for Debugging */}
+                <div className="absolute top-4 right-4 text-[10px] text-gray-400 font-mono">v2.4 (Fixed)</div>
+
                 <div className="text-center mb-10">
                     <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
                         <div className="bg-primary p-2 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">

@@ -22,7 +22,7 @@ export default function MessagesPage() {
             try {
                 const res = await apiFetch(`/api/conversations?userId=${userId}`);
                 if (res.ok) {
-                    const data = await res.json();
+                    const data = await res.json() as any[];
                     setConversations(data);
                 }
             } catch (error) {

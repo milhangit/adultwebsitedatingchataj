@@ -40,7 +40,7 @@ function SearchContent() {
 
                 const res = await fetch(`/api/profiles?${params.toString()}`);
                 if (res.ok) {
-                    const data = await res.json();
+                    const data = await res.json() as any;
                     setProfiles(data.profiles || []);
                     setTotal(data.pagination?.total || 0);
                 }

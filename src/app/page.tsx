@@ -57,12 +57,12 @@ export default function Home() {
         ]);
 
         if (profilesRes.ok) {
-          const data = await profilesRes.json();
+          const data = await profilesRes.json() as any;
           setFeaturedProfiles(data.profiles || []);
         }
 
         if (settingsRes.ok) {
-          const settings = await settingsRes.json();
+          const settings = await settingsRes.json() as any;
           if (Object.keys(settings).length > 0) {
             setSiteSettings((prev: any) => ({ ...prev, ...settings }));
           }

@@ -115,7 +115,7 @@ export default function AdminDashboard() {
             });
 
             if (res.ok) {
-                const data = await res.json();
+                const data = await res.json() as any;
                 if (isEdit) {
                     setSelectedUser({ ...selectedUser, imageUrl: data.url });
                 } else {
@@ -532,7 +532,7 @@ export default function AdminDashboard() {
                                                         formData.append('file', file);
                                                         const res = await apiFetch('/api/upload', { method: 'POST', body: formData });
                                                         if (res.ok) {
-                                                            const data = await res.json();
+                                                            const data = await res.json() as any;
                                                             setSettings({ ...settings, hero_image: data.url });
                                                         }
                                                     }} />
